@@ -5,6 +5,13 @@
     margin-top: 40px;
 }
 
+// align items start when width less than 760px
+@media (max-width: 760px) {
+    .random {
+        align-items: start;
+    }
+}
+
 .guess {
     display: flex;
     gap: 10px;
