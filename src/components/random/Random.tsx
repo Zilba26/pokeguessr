@@ -103,6 +103,8 @@ export const Random: FC<RandomProps> = (props: RandomProps) => {
     const pokemonToGuess = pokemonService.getRandomPokemon(pokemons);
     setPokemons(pokemons);
     setPokemonToGuess(pokemonToGuess);
+    setPokemonsGuess([]);
+    setWin(false);
   }
 
   const border = useColorModeValue('black', 'white');
