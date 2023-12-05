@@ -1,7 +1,3 @@
 .container {
-    /* min-height: calc(100vh - 70px); */
-}
-
-body {
-    overflow: auto !important;
+    min-height: calc(100vh - 70px);
 }

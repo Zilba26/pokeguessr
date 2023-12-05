@@ -15,7 +15,7 @@ export enum Type {
     Roche = "Roche",
     Sol = "Sol",
     Spectre = "Spectre",
-    Tenebres = "Tenebres",
+    Tenebres = "Ténèbres",
     Vol = "Vol",
 
 }
@@ -27,7 +27,7 @@ export namespace Type {
     }
 
     export function getTypeByName(type: string) {
-        switch (type.toLowerCase().replace("é", "e")) {
+        switch (type.toLowerCase().replace("é", "e").replace("è", "e")) {
             case "acier":
                 return Type.Acier;
             case "combat":

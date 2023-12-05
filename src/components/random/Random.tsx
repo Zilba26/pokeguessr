@@ -114,9 +114,9 @@ export const Random: FC<RandomProps> = (props: RandomProps) => {
   return (
     <>
     <div id="pyro">
-        <div className="before"></div>
-        <div className="after"></div>
-      </div>
+      <div className="before"></div>
+      <div className="after"></div>
+    </div>
     <div className='random'>
       <Box display="flex" gap="10px">
         <GenSelectBox gen={1} selected={genSelected[0]} onClick={() => toggleGenSelected(0)}></GenSelectBox>
