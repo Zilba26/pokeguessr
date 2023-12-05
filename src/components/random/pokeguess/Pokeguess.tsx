@@ -1,5 +1,5 @@
 import { FC, PropsWithChildren } from 'react'
-import { Pokemon } from '../../models/Pokemon'
+import { Pokemon } from '../../../models/Pokemon'
 import './Pokeguess.css'
 import { Box, useColorMode, useColorModeValue } from '@chakra-ui/react'
 import { animated, useSpring } from 'react-spring'

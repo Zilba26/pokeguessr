@@ -1,3 +1,13 @@
 .container {
     min-height: calc(100vh - 70px);
 }
+
+body {
+    overflow: auto !important;
+}
+
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

@@ -1,11 +1,11 @@
 import React, { FC, PropsWithChildren, useState } from 'react'
 
 import './Random.scss'
-import { Pokeguess } from '../pokeguess/Pokeguess';
+import { Pokeguess } from './pokeguess/Pokeguess';
 import { Pokemon } from '../../models/Pokemon';
 import { useLoaderData } from 'react-router-dom';
 import { Box, Button, Input, useColorModeValue, Image } from '@chakra-ui/react';
-import { GenSelectBox } from '../gen-select-box/GenSelectBox';
+import { GenSelectBox } from './GenSelectBox';
 import { PokemonService } from '../../service/PokemonService';
 
 interface RandomProps {
