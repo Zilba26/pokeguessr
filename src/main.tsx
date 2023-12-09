@@ -8,8 +8,6 @@ import Redirect from './Redirect'
 import { Random } from './components/random/Random'
 import { ChakraProvider, ColorModeScript } from '@chakra-ui/react'
 import theme from './theme'
-import { PokemonService } from './service/PokemonService'
-import { Pokemon } from './models/Pokemon'
 import Wordle from './components/wordle/Wordle'
 import { PokemonProvider } from './context/PokemonContext'
 
@@ -21,16 +19,6 @@ const router = createBrowserRouter([
       {
         path: '/',
         element: <Random />,
-        loader: async () => {
-          const pokemonService = new PokemonService();
-          const pokemons = await pokemonService.getAllPokemons();
-          const pokemonToGuess = pokemonService.getRandomPokemon(pokemons);
-
-          return {
-            pokemonsInit: pokemons,
-            pokemonToGuessInit: pokemonToGuess
-          }
-        }
       },
       {
         path: '/wordle',

@@ -10,6 +10,7 @@ export const PokemonProvider = ({ children }: PokemonProviderProps) => {
   const [data, setData] = useState<Pokemon[]>([]);
 
   const setAndFetchData = async () => {
+    console.log('Fetching data...');
     const pokemonService = new PokemonService();
     const pokemons = await pokemonService.getAllPokemons();
     setData(pokemons);

@@ -1,13 +1,12 @@
-import React, { FC, PropsWithChildren, useState } from 'react'
+import React, { FC, PropsWithChildren, useEffect, useState } from 'react'
 
 import './Random.scss'
 import { Pokeguess } from './pokeguess/Pokeguess';
 import { Pokemon } from '../../models/Pokemon';
-import { useLoaderData } from 'react-router-dom';
 import { Box, Button, Input, useColorModeValue, Image } from '@chakra-ui/react';
 import { GenSelectBox } from './GenSelectBox';
 import { PokemonService } from '../../service/PokemonService';
-import { useData } from '../../context/DataContext';
+import { useDataPokemon } from '../../context/DataContext';
 
 interface RandomProps {
 }
@@ -20,9 +19,22 @@ export const Random: FC<RandomProps> = (props: RandomProps) => {
   const [win, setWin] = useState<boolean>(false);
   const [genSelected, setGenSelected] = useState<boolean[]>([true, true, true, true, true, true, true, true, true]);
 
-  const {pokemonsInit, pokemonToGuessInit} = useLoaderData() as any;
-  const [pokemonToGuess, setPokemonToGuess] = useState<Pokemon>(pokemonToGuessInit);
-  const [pokemons, setPokemons] = useState<Pokemon[]>(pokemonsInit);
+  const pokemonData = useDataPokemon();
+  const service = new PokemonService();
+  const [pokemons, setPokemons] = useState<Pokemon[]>(pokemonData);
+  const [pokemonToGuess, setPokemonToGuess] = useState<Pokemon>(service.getRandomPokemon(pokemonData));
+
+  useEffect(() => {
+    console.log('i fire once');
+    if (pokemonData.length > 0) {
+      const pokemonService = new PokemonService();
+      const randomPokemon = pokemonService.getRandomPokemon(pokemonData);
+
+      console.log("setPokemonToGuess", randomPokemon);
+      setPokemonToGuess(randomPokemon);
+      setPokemons(pokemonData);
+    }
+  }, [pokemonData]);
 
   const enterPokemon = (pokemonInput?: Pokemon) => {
     if (pokemonInput == undefined) {
@@ -53,7 +65,6 @@ export const Random: FC<RandomProps> = (props: RandomProps) => {
       }, 10000);
     }
   }
-
 
   const onGuessInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
@@ -106,6 +117,10 @@ export const Random: FC<RandomProps> = (props: RandomProps) => {
   const border = useColorModeValue('black', 'white');
   const bg = useColorModeValue('whiteal', 'gray.700');
   const hoverBg = useColorModeValue('gray.100', 'gray.600');
+
+  if (pokemonData.length === 0 || !pokemonToGuess) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
