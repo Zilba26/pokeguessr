@@ -3,7 +3,7 @@ import React, { FC, PropsWithChildren, useEffect, useState } from 'react'
 import './Random.scss'
 import { Pokeguess } from './pokeguess/Pokeguess';
 import { Pokemon } from '../../models/Pokemon';
-import { Box, Button, Input, useColorModeValue, Image } from '@chakra-ui/react';
+import { Box, Button, Input, useColorModeValue, Image, Spinner, Center } from '@chakra-ui/react';
 import { GenSelectBox } from './GenSelectBox';
 import { PokemonService } from '../../service/PokemonService';
 import { useDataPokemon } from '../../context/DataContext';
@@ -25,7 +25,6 @@ export const Random: FC<RandomProps> = (props: RandomProps) => {
   const [pokemonToGuess, setPokemonToGuess] = useState<Pokemon>(service.getRandomPokemon(pokemonData));
 
   useEffect(() => {
-    console.log('i fire once');
     if (pokemonData.length > 0) {
       const pokemonService = new PokemonService();
       const randomPokemon = pokemonService.getRandomPokemon(pokemonData);
@@ -100,13 +99,16 @@ export const Random: FC<RandomProps> = (props: RandomProps) => {
 
   const toggleGenSelected = (index: number) => {
     const genSelectedCopy = [...genSelected];
+    if (genSelectedCopy.filter((gen: boolean) => gen).length === 1 && genSelectedCopy[index]) {
+      return;
+    }
     genSelectedCopy[index] = !genSelectedCopy[index];
     setGenSelected(genSelectedCopy);
   }
 
   const regeneratePokemon = async () => {
     const pokemonService = new PokemonService();
-    const pokemons = await pokemonService.getPokemonsByGenSelected(genSelected);
+    const pokemons = pokemonData.filter((pokemon: Pokemon) => genSelected[pokemon.generation - 1]);
     const pokemonToGuess = pokemonService.getRandomPokemon(pokemons);
     setPokemons(pokemons);
     setPokemonToGuess(pokemonToGuess);
@@ -119,7 +121,9 @@ export const Random: FC<RandomProps> = (props: RandomProps) => {
   const hoverBg = useColorModeValue('gray.100', 'gray.600');
 
   if (pokemonData.length === 0 || !pokemonToGuess) {
-    return <div>Loading...</div>;
+    return <Center h="100%" minH="inherit">
+      <Spinner size="xl"/>
+    </Center>;
   }
 
   return (
