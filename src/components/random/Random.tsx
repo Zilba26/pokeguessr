@@ -7,6 +7,7 @@ import { useLoaderData } from 'react-router-dom';
 import { Box, Button, Input, useColorModeValue, Image } from '@chakra-ui/react';
 import { GenSelectBox } from './GenSelectBox';
 import { PokemonService } from '../../service/PokemonService';
+import { useData } from '../../context/DataContext';
 
 interface RandomProps {
 }
@@ -22,11 +23,6 @@ export const Random: FC<RandomProps> = (props: RandomProps) => {
   const {pokemonsInit, pokemonToGuessInit} = useLoaderData() as any;
   const [pokemonToGuess, setPokemonToGuess] = useState<Pokemon>(pokemonToGuessInit);
   const [pokemons, setPokemons] = useState<Pokemon[]>(pokemonsInit);
-
-  const children = [];
-  for (let i = 0; i < pokemonsGuess.length; i++) {
-    children.push(<Pokeguess key={pokemonsGuess[i].pokedexId} pokemonGuess={pokemonsGuess[i]} pokemonToGuess={pokemonToGuess} />);
-  }
 
   const enterPokemon = (pokemonInput?: Pokemon) => {
     if (pokemonInput == undefined) {
@@ -171,7 +167,9 @@ export const Random: FC<RandomProps> = (props: RandomProps) => {
           <RandomTD>Taille</RandomTD>
         </Box>
         <Box className='table-body' display="flex" flexDir="column-reverse">
-          {children}
+          {pokemonsGuess.map((pokemon: Pokemon) => {
+            return <Pokeguess key={pokemon.pokedexId} pokemonGuess={pokemon} pokemonToGuess={pokemonToGuess} />
+          })}
         </Box>
       </Box>
     </div>

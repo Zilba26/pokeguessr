@@ -11,6 +11,7 @@ import theme from './theme'
 import { PokemonService } from './service/PokemonService'
 import { Pokemon } from './models/Pokemon'
 import Wordle from './components/wordle/Wordle'
+import { PokemonProvider } from './context/PokemonContext'
 
 const router = createBrowserRouter([
   {
@@ -24,18 +25,6 @@ const router = createBrowserRouter([
           const pokemonService = new PokemonService();
           const pokemons = await pokemonService.getAllPokemons();
           const pokemonToGuess = pokemonService.getRandomPokemon(pokemons);
-
-          const letterCountMap: Record<number, Pokemon[]> = {};
-          for (const pokemon of pokemons) {
-              const letterCount = pokemon.name.length;
-
-              if (letterCountMap[letterCount]) {
-                  letterCountMap[letterCount].push(pokemon);
-              } else {
-                  letterCountMap[letterCount] = [pokemon];
-              }
-          }
-          console.log(letterCountMap);
 
           return {
             pokemonsInit: pokemons,
@@ -56,7 +45,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ChakraProvider theme={theme}>
       <ColorModeScript initialColorMode={theme.config.initialColorMode} />  
-      <RouterProvider router={router} />
+      <PokemonProvider>
+        <RouterProvider router={router} />
+      </PokemonProvider>
     </ChakraProvider>
   </React.StrictMode>,
 )

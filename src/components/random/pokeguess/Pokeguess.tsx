@@ -62,8 +62,6 @@ export const Pokeguess: FC<PokeguessProps> = (props: PokeguessProps) => {
 
   const pg = props.pokemonGuess;
   const ptg = props.pokemonToGuess;
-
-  console.log(pg);
   
 
   const getArrow = (nb: number) => {

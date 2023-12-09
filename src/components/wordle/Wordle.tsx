@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Keyboard } from '../keyboard/Keyboard';
+import { Keyboard } from './keyboard/Keyboard';
 import { Box } from '@chakra-ui/react';
-import Board from '../keyboard/Board';
+import Board from './Board';
 
 const Wordle = () => {
 
