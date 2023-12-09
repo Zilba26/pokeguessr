@@ -3,6 +3,7 @@ import { Keypad } from './Keypad';
 import { Box } from '@chakra-ui/react';
 
 interface KeyboardProps {
+  onLetterClick?: (letter: string) => void;
 }
 
 export const Keyboard: FC<KeyboardProps> = (props: KeyboardProps) => {
@@ -16,7 +17,9 @@ export const Keyboard: FC<KeyboardProps> = (props: KeyboardProps) => {
           <Box key={index} className='flex-center' gap="5px">
             {letterRow.map((letter, index) => {
               return (
-                <Keypad key={index} letter={letter}></Keypad>
+                <Box key={index} onClick={props.onLetterClick ? () => props.onLetterClick!(letter) : undefined}>
+                  <Keypad letter={letter}></Keypad>
+                </Box>
               )
             })}
           </Box>

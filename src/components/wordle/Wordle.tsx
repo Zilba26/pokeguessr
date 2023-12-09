@@ -24,6 +24,12 @@ const Wordle = () => {
     }
   }, [pokemons]);
 
+  const pressLetter = (letter: string) => {
+    const newWords = [...words];
+    newWords[currentIndexEditingWord] = newWords[currentIndexEditingWord] + letter;
+    setWords(newWords);
+  }
+
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       setError(false);
@@ -40,9 +46,7 @@ const Wordle = () => {
         }
       }
       if (/^[a-zA-Z]$/.test(event.key) && words[currentIndexEditingWord].length < 12) {
-        const newWords = [...words];
-        newWords[currentIndexEditingWord] = newWords[currentIndexEditingWord] + event.key;
-        setWords(newWords);
+        pressLetter(event.key.toUpperCase());
       }
       if (event.key === 'Backspace') {
         const newWords = [...words];
@@ -55,7 +59,10 @@ const Wordle = () => {
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentIndexEditingWord, words, pokemons]);
+
+  
 
   if (pokemons.length === 0 || !pokemonToGuess) {
     return <Center h="100%" minH="inherit">
@@ -73,7 +80,7 @@ const Wordle = () => {
         </Box>
       </Box>
       <Box  pb="50px">
-        <Keyboard></Keyboard>
+        <Keyboard onLetterClick={pressLetter}></Keyboard>
       </Box>
     </Box>
   );
