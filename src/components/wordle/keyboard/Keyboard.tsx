@@ -1,9 +1,12 @@
 import React, { FC } from 'react'
 import { Keypad } from './Keypad';
-import { Box } from '@chakra-ui/react';
+import { Box, IconButton } from '@chakra-ui/react';
+import { MdKeyboardBackspace, MdKeyboardReturn } from 'react-icons/md'
 
 interface KeyboardProps {
   onLetterClick?: (letter: string) => void;
+  onBackspaceClick?: () => void;
+  onEnterClick?: () => void;
 }
 
 export const Keyboard: FC<KeyboardProps> = (props: KeyboardProps) => {
@@ -15,6 +18,12 @@ export const Keyboard: FC<KeyboardProps> = (props: KeyboardProps) => {
       {letterList.map((letterRow, index) => {
         return (
           <Box key={index} className='flex-center' gap="5px">
+            {index == 2 && <IconButton w="105px" h="50px"
+              aria-label='Backspace'
+              fontSize="1.5rem"
+              onClick={props.onBackspaceClick}
+              icon={<MdKeyboardBackspace />}
+            />}
             {letterRow.map((letter, index) => {
               return (
                 <Box key={index} onClick={props.onLetterClick ? () => props.onLetterClick!(letter) : undefined}>
@@ -22,6 +31,12 @@ export const Keyboard: FC<KeyboardProps> = (props: KeyboardProps) => {
                 </Box>
               )
             })}
+            {index == 2 && <IconButton w="105px" h="50px"
+              aria-label='Enter'
+              fontSize="1.5rem"
+              onClick={props.onEnterClick}
+              icon={<MdKeyboardReturn />}
+            />}
           </Box>
         )
       })}

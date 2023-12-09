@@ -25,33 +25,43 @@ const Wordle = () => {
   }, [pokemons]);
 
   const pressLetter = (letter: string) => {
+    setError(false);
     const newWords = [...words];
     newWords[currentIndexEditingWord] = newWords[currentIndexEditingWord] + letter;
     setWords(newWords);
   }
 
+  const pressBackspace = () => {
+    setError(false);
+    const newWords = [...words];
+    newWords[currentIndexEditingWord] = newWords[currentIndexEditingWord].slice(0, -1);
+    setWords(newWords);
+  }
+
+  const pressEnter = () => {
+    setError(false);
+    const enterPokemon = pokemons.find((pokemon) => {
+      return pokemon.equalsName(words[currentIndexEditingWord]);
+    });
+    if (enterPokemon) {
+      setCurrentIndexEditingWord(currentIndexEditingWord + 1);
+    } else {
+      setError(true);
+      console.log('Pokemon non trouvé');
+    }
+  }
+
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      setError(false);
 
       if (event.key === 'Enter') {
-        const enterPokemon = pokemons.find((pokemon) => {
-          return pokemon.equalsName(words[currentIndexEditingWord]);
-        });
-        if (enterPokemon) {
-          setCurrentIndexEditingWord(currentIndexEditingWord + 1);
-        } else {
-          setError(true);
-          console.log('Pokemon non trouvé');
-        }
+        pressEnter();
       }
       if (/^[a-zA-Z]$/.test(event.key) && words[currentIndexEditingWord].length < 12) {
         pressLetter(event.key.toUpperCase());
       }
       if (event.key === 'Backspace') {
-        const newWords = [...words];
-        newWords[currentIndexEditingWord] = newWords[currentIndexEditingWord].slice(0, -1);
-        setWords(newWords);
+        pressBackspace();
       }
     };
 
@@ -80,7 +90,7 @@ const Wordle = () => {
         </Box>
       </Box>
       <Box  pb="50px">
-        <Keyboard onLetterClick={pressLetter}></Keyboard>
+        <Keyboard onLetterClick={pressLetter} onBackspaceClick={pressBackspace} onEnterClick={pressEnter}></Keyboard>
       </Box>
     </Box>
   );
