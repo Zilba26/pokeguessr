@@ -1,8 +1,12 @@
 import React, { FC } from 'react'
 import { Box, useColorModeValue } from '@chakra-ui/react'
+import { Pokemon } from '../../models/Pokemon';
+import WordleSoluce from './WordleSoluce';
 
 interface BoardProps {
   words: string[];
+  pokemonToGuess: Pokemon;
+  currentIndexEditingWord: number;
 }
 
 const Board: FC<BoardProps> = (props: BoardProps) => {
@@ -11,13 +15,25 @@ const Board: FC<BoardProps> = (props: BoardProps) => {
 
   const borderCaseColor = useColorModeValue("black", "white");
 
-  const getLigneElements = (word: string) => {
+  const getLigneElements = (word: string, index: number) => {
     const elements = [];
-    const upperCaseWord = word.toUpperCase();
-    for (let index = 0; index < maxLetters; index++) {
-      const element = upperCaseWord[index] ?? "";
+    const pokemonToGuessNormalized = props.pokemonToGuess.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
+    const wordNormalized = word.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
+    const wordleSoluce = WordleSoluce(wordNormalized, pokemonToGuessNormalized);
+    for (let i = 0; i < maxLetters; i++) {
+      const element = wordNormalized[i] ?? "";
+      let color;
+      if (index >= props.currentIndexEditingWord) {
+        color = "gray.500";
+      } else if (i < wordleSoluce.length) {
+        color = wordleSoluce[i];
+      } else if (pokemonToGuessNormalized[i] === undefined) {
+        color = "red.500";
+      } else {
+        color = "gray.500";
+      }
       elements.push(
-        <Box key={element + index} w="50px" h="50px" className='flex-center' bgColor="gray.400" border="1px" borderColor={borderCaseColor}>
+        <Box key={element + i} w="50px" h="50px" className='flex-center' color="white" bgColor={color} border="1px" borderColor={borderCaseColor}>
           {element}
         </Box>
       );
@@ -30,7 +46,7 @@ const Board: FC<BoardProps> = (props: BoardProps) => {
       {props.words.map((word, index) => {
         return (
           <Box key={word + index} className='flex-center' gap="7px">
-            {getLigneElements(word)}
+            {getLigneElements(word, index)}
           </Box>
         )
       })}

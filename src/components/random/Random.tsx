@@ -29,7 +29,6 @@ export const Random: FC<RandomProps> = (props: RandomProps) => {
       const pokemonService = new PokemonService();
       const randomPokemon = pokemonService.getRandomPokemon(pokemonData);
 
-      console.log("setPokemonToGuess", randomPokemon);
       setPokemonToGuess(randomPokemon);
       setPokemons(pokemonData);
     }
