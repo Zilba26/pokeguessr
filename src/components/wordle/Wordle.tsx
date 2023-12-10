@@ -107,6 +107,10 @@ const Wordle = () => {
     onClose();
   }
 
+  const removeFocus = (e: React.FocusEvent<HTMLButtonElement>) => {
+    e.currentTarget.blur();
+  }
+
 
   if (pokemons.length === 0 || !pokemonToGuess) {
     return <Center h="100%" minH="inherit">
@@ -121,7 +125,7 @@ const Wordle = () => {
         <Box className='flex-center'>
           <GenSelect></GenSelect>
           <Box w="10px"></Box>
-          <IconButton w={50} h={50} fontSize="20px" aria-label="Recommencer" icon={<MdRefresh/>} onClick={reset}></IconButton>
+          <IconButton w={50} h={50} fontSize="20px" aria-label="Recommencer" icon={<MdRefresh/>} onClick={reset} onFocus={removeFocus}></IconButton>
         </Box>
         <Box h="20px"></Box>
         <Box overflowY="auto" ref={scrollableWrapperRef} flex={1}>
