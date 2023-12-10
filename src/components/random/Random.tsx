@@ -41,9 +41,9 @@ export const Random: FC<RandomProps> = (props: RandomProps) => {
     if (pokemonInput == undefined) {
       const input = document.querySelector<HTMLInputElement>('input');
       if (input) {
-        const pokemonName = input.value;
+        const pokemonName = input.value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
         const pokemon = pokemons.find((pokemon: Pokemon) => {
-          return pokemon.name.toLowerCase() === pokemonName.toLowerCase();
+          return pokemon.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase() === pokemonName;
         });
         if (pokemon) {
           pokemonInput = pokemon;
@@ -68,11 +68,11 @@ export const Random: FC<RandomProps> = (props: RandomProps) => {
   }
 
   const onGuessInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
+    const value = event.target.value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
     let list;
     if (value.length > 2) {
       list = pokemons.filter((pokemon: Pokemon) => {
-        return pokemon.name.toLowerCase().startsWith(value.toLowerCase()) && !pokemonsGuess.includes(pokemon);
+        return pokemon.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().startsWith(value) && !pokemonsGuess.includes(pokemon);
       });
     } else {
       list = null;
