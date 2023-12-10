@@ -1,12 +1,12 @@
-import React, { FC, PropsWithChildren, useState } from 'react'
+import React, { FC, PropsWithChildren, useEffect, useState } from 'react'
 
 import './Random.scss'
-import { Pokeguess } from '../pokeguess/Pokeguess';
+import { Pokeguess } from './pokeguess/Pokeguess';
 import { Pokemon } from '../../models/Pokemon';
-import { useLoaderData } from 'react-router-dom';
-import { Box, Button, Input, useColorModeValue, Image } from '@chakra-ui/react';
-import { GenSelectBox } from '../gen-select-box/GenSelectBox';
+import { Box, Button, Input, useColorModeValue, Image, Spinner, Center } from '@chakra-ui/react';
 import { PokemonService } from '../../service/PokemonService';
+import { useDataPokemon } from '../../context/DataContext';
+import GenSelect from '../gen-select/GenSelect';
 
 interface RandomProps {
 }
@@ -17,24 +17,33 @@ export const Random: FC<RandomProps> = (props: RandomProps) => {
   const [pokemonList, setPokemonList] = useState<Pokemon[] | null>(null);
   const [selectedPokemon, setSelectedPokemon] = useState<Pokemon | null>(null);
   const [win, setWin] = useState<boolean>(false);
-  const [genSelected, setGenSelected] = useState<boolean[]>([true, true, true, true, true, true, true, true, true]);
 
-  const {pokemonsInit, pokemonToGuessInit} = useLoaderData() as any;
-  const [pokemonToGuess, setPokemonToGuess] = useState<Pokemon>(pokemonToGuessInit);
-  const [pokemons, setPokemons] = useState<Pokemon[]>(pokemonsInit);
+  const genSelectedLocal = localStorage.getItem("genSelected");
+  const [genSelected, setGenSelected] = useState<boolean[]>(
+    genSelectedLocal ? JSON.parse(genSelectedLocal) : [true, true, true, true, true, true, true, true, true]);
+    
+  const pokemonData = useDataPokemon();
+  const service = new PokemonService();
+  const [pokemons, setPokemons] = useState<Pokemon[]>(pokemonData.filter((pokemon: Pokemon) => genSelected[pokemon.generation - 1]));
+  const [pokemonToGuess, setPokemonToGuess] = useState<Pokemon>(service.getRandomPokemon(pokemonData));
 
-  const children = [];
-  for (let i = 0; i < pokemonsGuess.length; i++) {
-    children.push(<Pokeguess key={pokemonsGuess[i].pokedexId} pokemonGuess={pokemonsGuess[i]} pokemonToGuess={pokemonToGuess} />);
-  }
+  useEffect(() => {
+    if (pokemonData.length > 0) {
+      const pokemonService = new PokemonService();
+      const randomPokemon = pokemonService.getRandomPokemon(pokemonData);
+
+      setPokemonToGuess(randomPokemon);
+      setPokemons(pokemonData);
+    }
+  }, [pokemonData]);
 
   const enterPokemon = (pokemonInput?: Pokemon) => {
     if (pokemonInput == undefined) {
       const input = document.querySelector<HTMLInputElement>('input');
       if (input) {
-        const pokemonName = input.value;
+        const pokemonName = input.value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
         const pokemon = pokemons.find((pokemon: Pokemon) => {
-          return pokemon.name.toLowerCase() === pokemonName.toLowerCase();
+          return pokemon.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase() === pokemonName;
         });
         if (pokemon) {
           pokemonInput = pokemon;
@@ -58,13 +67,12 @@ export const Random: FC<RandomProps> = (props: RandomProps) => {
     }
   }
 
-
   const onGuessInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
+    const value = event.target.value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
     let list;
     if (value.length > 2) {
       list = pokemons.filter((pokemon: Pokemon) => {
-        return pokemon.name.toLowerCase().startsWith(value.toLowerCase()) && !pokemonsGuess.includes(pokemon);
+        return pokemon.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().startsWith(value) && !pokemonsGuess.includes(pokemon);
       });
     } else {
       list = null;
@@ -91,15 +99,9 @@ export const Random: FC<RandomProps> = (props: RandomProps) => {
     }
   }
 
-  const toggleGenSelected = (index: number) => {
-    const genSelectedCopy = [...genSelected];
-    genSelectedCopy[index] = !genSelectedCopy[index];
-    setGenSelected(genSelectedCopy);
-  }
-
   const regeneratePokemon = async () => {
     const pokemonService = new PokemonService();
-    const pokemons = await pokemonService.getPokemonsByGenSelected(genSelected);
+    const pokemons = pokemonData.filter((pokemon: Pokemon) => genSelected[pokemon.generation - 1]);
     const pokemonToGuess = pokemonService.getRandomPokemon(pokemons);
     setPokemons(pokemons);
     setPokemonToGuess(pokemonToGuess);
@@ -111,24 +113,20 @@ export const Random: FC<RandomProps> = (props: RandomProps) => {
   const bg = useColorModeValue('whiteal', 'gray.700');
   const hoverBg = useColorModeValue('gray.100', 'gray.600');
 
+  if (pokemonData.length === 0 || !pokemonToGuess) {
+    return <Center h="100%" minH="inherit">
+      <Spinner size="xl"/>
+    </Center>;
+  }
+
   return (
     <>
     <div id="pyro">
-        <div className="before"></div>
-        <div className="after"></div>
-      </div>
+      <div className="before"></div>
+      <div className="after"></div>
+    </div>
     <div className='random'>
-      <Box display="flex" gap="10px">
-        <GenSelectBox gen={1} selected={genSelected[0]} onClick={() => toggleGenSelected(0)}></GenSelectBox>
-        <GenSelectBox gen={2} selected={genSelected[1]} onClick={() => toggleGenSelected(1)}></GenSelectBox>
-        <GenSelectBox gen={3} selected={genSelected[2]} onClick={() => toggleGenSelected(2)}></GenSelectBox>
-        <GenSelectBox gen={4} selected={genSelected[3]} onClick={() => toggleGenSelected(3)}></GenSelectBox>
-        <GenSelectBox gen={5} selected={genSelected[4]} onClick={() => toggleGenSelected(4)}></GenSelectBox>
-        <GenSelectBox gen={6} selected={genSelected[5]} onClick={() => toggleGenSelected(5)}></GenSelectBox>
-        <GenSelectBox gen={7} selected={genSelected[6]} onClick={() => toggleGenSelected(6)}></GenSelectBox>
-        <GenSelectBox gen={8} selected={genSelected[7]} onClick={() => toggleGenSelected(7)}></GenSelectBox>
-        <GenSelectBox gen={9} selected={genSelected[8]} onClick={() => toggleGenSelected(8)}></GenSelectBox>
-      </Box>
+      <GenSelect triggerChange={setGenSelected}></GenSelect>
       <Box h="20px"></Box>
       <Button onClick={regeneratePokemon}>Regénérer</Button>
       <Box h="30px"></Box>
@@ -148,7 +146,6 @@ export const Random: FC<RandomProps> = (props: RandomProps) => {
           </Box>
         </div>
         <Button onClick={() => enterPokemon()}>Enter</Button>
-        {/* <p>{pokemonToGuess.name}</p> */}
       </div>
 
       {(win) && 
@@ -171,7 +168,9 @@ export const Random: FC<RandomProps> = (props: RandomProps) => {
           <RandomTD>Taille</RandomTD>
         </Box>
         <Box className='table-body' display="flex" flexDir="column-reverse">
-          {children}
+          {pokemonsGuess.map((pokemon: Pokemon) => {
+            return <Pokeguess key={pokemon.pokedexId} pokemonGuess={pokemon} pokemonToGuess={pokemonToGuess} />
+          })}
         </Box>
       </Box>
     </div>

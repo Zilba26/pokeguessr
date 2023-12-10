@@ -4,6 +4,7 @@ import Navbar from "./components/navbar/Navbar"
 import './Root.css'
 
 const Root: React.FC = () => {
+  
   return (
     <>
         <Navbar />

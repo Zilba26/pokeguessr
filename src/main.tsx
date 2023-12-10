@@ -6,12 +6,10 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import Root from './Root'
 import Redirect from './Redirect'
 import { Random } from './components/random/Random'
-import { TyradexAPI } from './repository/TyradexAPI'
 import { ChakraProvider, ColorModeScript } from '@chakra-ui/react'
 import theme from './theme'
-import { PokemonService } from './service/PokemonService'
-
-
+import Wordle from './components/wordle/Wordle'
+import { PokemonProvider } from './context/PokemonContext'
 
 const router = createBrowserRouter([
   {
@@ -20,20 +18,11 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <div>Home</div>
+        element: <Random />,
       },
       {
-        path: '/random',
-        element: <Random />,
-        loader: async () => {
-          const pokemonService = new PokemonService();
-          const pokemons = await pokemonService.getAllPokemons();
-          const pokemonToGuess = pokemonService.getRandomPokemon(pokemons);
-          return {
-            pokemonsInit: pokemons,
-            pokemonToGuessInit: pokemonToGuess
-          }
-        }
+        path: '/wordle',
+        element: <Wordle />,
       }
     ],
     errorElement: <Redirect />,
@@ -44,7 +33,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ChakraProvider theme={theme}>
       <ColorModeScript initialColorMode={theme.config.initialColorMode} />  
-      <RouterProvider router={router} />
+      <PokemonProvider>
+        <RouterProvider router={router} />
+      </PokemonProvider>
     </ChakraProvider>
   </React.StrictMode>,
 )
