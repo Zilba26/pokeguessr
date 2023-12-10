@@ -8,7 +8,10 @@ interface GenSelectProps {
 
 const GenSelect: FC<GenSelectProps> = (props: GenSelectProps) => {
 
-  const [genSelected, setGenSelected] = useState<boolean[]>([true, true, true, true, true, true, true, true, true]);
+  const genSelectedLocal = localStorage.getItem("genSelected");
+
+  const [genSelected, setGenSelected] = useState<boolean[]>(
+    genSelectedLocal ? JSON.parse(genSelectedLocal) : [true, true, true, true, true, true, true, true, true]);
 
   const toggleGenSelected = (index: number) => {
     const genSelectedCopy = [...genSelected];
@@ -17,6 +20,7 @@ const GenSelect: FC<GenSelectProps> = (props: GenSelectProps) => {
     }
     genSelectedCopy[index] = !genSelectedCopy[index];
     setGenSelected(genSelectedCopy);
+    localStorage.setItem("genSelected", JSON.stringify(genSelectedCopy));
     if (props.triggerChange) {
       props.triggerChange(genSelectedCopy);
     }
