@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
 import { Keypad } from './Keypad';
 import { Box, IconButton } from '@chakra-ui/react';
-import { MdKeyboardBackspace, MdKeyboardReturn } from 'react-icons/md'
+import { MdArrowBackIos, MdArrowBackIosNew, MdKeyboardBackspace, MdKeyboardReturn } from 'react-icons/md'
 
 interface KeyboardProps {
   onLetterClick?: (letter: string) => void;
@@ -22,7 +22,7 @@ export const Keyboard: FC<KeyboardProps> = (props: KeyboardProps) => {
               aria-label='Backspace'
               fontSize="1.5rem"
               onClick={props.onBackspaceClick}
-              icon={<MdKeyboardBackspace />}
+              icon={<MdArrowBackIosNew />}
             />}
             {letterRow.map((letter, index) => {
               return (
@@ -33,7 +33,7 @@ export const Keyboard: FC<KeyboardProps> = (props: KeyboardProps) => {
             })}
             {index == 2 && <IconButton w="105px" h="50px"
               aria-label='Enter'
-              fontSize="1.5rem"
+              fontSize="1.7rem"
               onClick={props.onEnterClick}
               icon={<MdKeyboardReturn />}
             />}

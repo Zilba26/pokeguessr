@@ -63,7 +63,6 @@ const Wordle = () => {
         }
       } else {
         setError(true);
-        console.log('Pokemon non trouvé');
       }
     }
   }

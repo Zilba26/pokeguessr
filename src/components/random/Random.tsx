@@ -143,7 +143,6 @@ export const Random: FC<RandomProps> = (props: RandomProps) => {
           </Box>
         </div>
         <Button onClick={() => enterPokemon()}>Enter</Button>
-        <p>{pokemonToGuess.name}</p>
       </div>
 
       {(win) && 
