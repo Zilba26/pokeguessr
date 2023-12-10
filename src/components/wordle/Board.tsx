@@ -7,6 +7,7 @@ interface BoardProps {
   words: string[];
   pokemonToGuess: Pokemon;
   currentIndexEditingWord: number;
+  error?: boolean;
 }
 
 const Board: FC<BoardProps> = (props: BoardProps) => {
@@ -33,7 +34,8 @@ const Board: FC<BoardProps> = (props: BoardProps) => {
         color = "gray.500";
       }
       elements.push(
-        <Box key={element + i} w="50px" h="50px" className='flex-center' color="white" bgColor={color} border="1px" borderColor={borderCaseColor}>
+        <Box key={element + i} w="50px" h="50px" className='flex-center' fontWeight={props.error && index == props.currentIndexEditingWord ? "bold" : "normal"}
+          color={props.error && index == props.currentIndexEditingWord ? "red" : "white"} bgColor={color} border="1px" borderColor={borderCaseColor}>
           {element}
         </Box>
       );

@@ -1,10 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Keyboard } from './keyboard/Keyboard';
-import { Box, Button, Center, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Spinner, useDisclosure } from '@chakra-ui/react';
+import { Box, Button, Center, IconButton, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Spinner, useDisclosure } from '@chakra-ui/react';
 import Board from './Board';
 import { useDataPokemon } from '../../context/DataContext';
 import { PokemonService } from '../../service/PokemonService';
 import { Pokemon } from '../../models/Pokemon';
+import GenSelect from '../gen-select/GenSelect';
+import { MdRedo, MdRefresh } from 'react-icons/md';
 
 const Wordle = () => {
 
@@ -108,15 +110,18 @@ const Wordle = () => {
   return (
     <>
       <Box h="var(--height)" minH="inherit" maxH="var(--height)" display="flex" flexDir="column">
-        <p>{pokemonToGuess.name}</p>
-        <Box flex={1} pt="20px" overflowY="auto" ref={scrollableWrapperRef}>
-          <Board words={words} pokemonToGuess={pokemonToGuess} currentIndexEditingWord={currentIndexEditingWord}></Board>
-          <Box h="2px"></Box>
+        <Box h="20px"></Box>
+        <Box className='flex-center'>
+          <GenSelect></GenSelect>
+          <Box w="10px"></Box>
+          <IconButton w={50} h={50} fontSize="20px" aria-label="Recommencer" icon={<MdRefresh/>} onClick={reset}></IconButton>
         </Box>
-        <Box h="50px" className='flex-center'>
-          {error && <Box color="red">Ce pokemon n'existe pas</Box>}
+        {words.length > 6 && <Box h="8px"></Box>}
+        <Box className='flex-center' flex={1} pt="20px" overflowY="auto" ref={scrollableWrapperRef}>
+          <Board words={words} pokemonToGuess={pokemonToGuess} currentIndexEditingWord={currentIndexEditingWord} error={error}></Board>
         </Box>
-        <Box pb="50px">
+        <Box h="8px"></Box>
+        <Box pb="30px">
           <Keyboard onLetterClick={pressLetter} onBackspaceClick={pressBackspace} onEnterClick={pressEnter}></Keyboard>
         </Box>
       </Box>
