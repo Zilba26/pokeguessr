@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Keyboard } from './keyboard/Keyboard';
+import { Keyboard, LettersStatus } from './keyboard/Keyboard';
 import { Box, Button, Center, IconButton, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Spinner, useDisclosure } from '@chakra-ui/react';
 import Board from './Board';
 import { useDataPokemon } from '../../context/DataContext';
@@ -19,6 +19,14 @@ const Wordle = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const scrollableWrapperRef = useRef(null);
   const [win, setWin] = useState<boolean>(false);
+
+  const alphabetMap: Map<string, LettersStatus> = new Map();
+  for (let i = 0; i < 26; i++) {
+      const letter = String.fromCharCode(65 + i);  // 'A' a le code ASCII 65
+      alphabetMap.set(letter, "pending");
+  }
+
+  const [lettersStatus, setLettersStatus] = useState<Map<string, LettersStatus>>(alphabetMap);
 
   useEffect(() => {
     if (pokemons.length > 0) {
@@ -54,6 +62,7 @@ const Wordle = () => {
         return pokemon.equalsName(words[currentIndexEditingWord]);
       });
       if (enterPokemon) {
+        updateLettersStatus();
         setCurrentIndexEditingWord(currentIndexEditingWord + 1);
         if (currentIndexEditingWord === 5) {
           onOpen();
@@ -65,6 +74,22 @@ const Wordle = () => {
         setError(true);
       }
     }
+  }
+
+  const updateLettersStatus = () => {
+    const word = words[currentIndexEditingWord].toUpperCase();
+    const pokemonName = pokemonToGuess.name.toUpperCase();
+    for (let i = 0; i < word.length; i++) {
+      const letter = word.charAt(i);
+      if (pokemonName.charAt(i) === letter) {
+        lettersStatus.set(letter, "good");
+      } else if (pokemonName.includes(letter) && lettersStatus.get(letter) !== "good") {
+        lettersStatus.set(letter, "bad spot");
+      } else {
+        lettersStatus.set(letter, "not good");
+      }
+    }
+    setLettersStatus(new Map(lettersStatus));
   }
 
   useEffect(() => {
@@ -134,7 +159,7 @@ const Wordle = () => {
         </Box>
         <Box h="20px"></Box>
         <Box pb="30px">
-          <Keyboard onLetterClick={pressLetter} onBackspaceClick={pressBackspace} onEnterClick={pressEnter}></Keyboard>
+          <Keyboard lettersStatus={lettersStatus} onLetterClick={pressLetter} onBackspaceClick={pressBackspace} onEnterClick={pressEnter}></Keyboard>
         </Box>
       </Box>
       <Modal isOpen={isOpen} onClose={onClose} isCentered autoFocus={false} closeOnOverlayClick={false} closeOnEsc={false}>

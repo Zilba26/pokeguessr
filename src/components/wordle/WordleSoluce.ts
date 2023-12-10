@@ -41,7 +41,7 @@ const WordleSoluce = (guess: string, solution: string) => {
         )
 
         if (indexOfPresentChar > -1) {
-            statuses[i] = 'orange.500'
+            statuses[i] = 'yellow.500'
             solutionCharsTaken[indexOfPresentChar] = true
             return
         } else {

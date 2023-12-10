@@ -1,11 +1,9 @@
-import { Box, Button } from '@chakra-ui/react';
+import { Button } from '@chakra-ui/react';
 import React, { FC } from 'react'
-
-export type KeypadStatus = "default" | "red" | "orange" | "disabled";
 
 interface KeypadProps {
     letter: string;
-    status?: KeypadStatus;
+    color?: string | null;
 }
 
 export const Keypad: FC<KeypadProps> = (props: KeypadProps) => {
@@ -14,8 +12,14 @@ export const Keypad: FC<KeypadProps> = (props: KeypadProps) => {
         e.target.blur();
     }
 
+    let color;
+    if (props.color == "none" || props.color == null) {
+        color = "var(--chakra-colors-whiteAlpha-200)"
+    } else {
+        color = props.color;
+    }
 
     return (
-        <Button w="50px" h="50px" onFocus={removeFocus}>{props.letter}</Button>
+        <Button w="50px" h="50px" bgColor={color} opacity={props.color ? 1 : 0.5} onFocus={removeFocus}>{props.letter}</Button>
     )
 }
