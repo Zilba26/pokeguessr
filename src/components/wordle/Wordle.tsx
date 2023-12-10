@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Keyboard } from './keyboard/Keyboard';
-import { Box, Center, Spinner } from '@chakra-ui/react';
+import { Box, Button, Center, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Spinner, useDisclosure } from '@chakra-ui/react';
 import Board from './Board';
 import { useDataPokemon } from '../../context/DataContext';
 import { PokemonService } from '../../service/PokemonService';
@@ -14,6 +14,7 @@ const Wordle = () => {
   const service = new PokemonService();
   const [pokemonToGuess, setPokemonToGuess] = useState<Pokemon>(service.getRandomPokemon(pokemons));
   const [error, setError] = useState<boolean>(false);
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   useEffect(() => {
     if (pokemons.length > 0) {
@@ -45,6 +46,12 @@ const Wordle = () => {
     });
     if (enterPokemon) {
       setCurrentIndexEditingWord(currentIndexEditingWord + 1);
+      if (currentIndexEditingWord === 5) {
+        onOpen();
+      }
+      if (currentIndexEditingWord > 5) {
+        setWords([...words, ""]);
+      }
     } else {
       setError(true);
       console.log('Pokemon non trouvé');
@@ -72,27 +79,54 @@ const Wordle = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentIndexEditingWord, words, pokemons]);
 
-  
+  const reset = () => {
+    setWords(["", "", "", "", "", ""]);
+    setCurrentIndexEditingWord(0);
+    setPokemonToGuess(service.getRandomPokemon(pokemons));
+    onClose();
+  }
+
+  const continueGame = () => {
+    setWords([...words, ""]);
+    onClose();
+  }
+
 
   if (pokemons.length === 0 || !pokemonToGuess) {
     return <Center h="100%" minH="inherit">
-      <Spinner size="xl"/>
+      <Spinner size="xl" />
     </Center>;
   }
 
   return (
-    <Box minH="inherit" display="flex" flexDir="column">
-      <p>{pokemonToGuess.name}</p>
-      <Box flex={1} pt="20px">
-        <Board words={words} pokemonToGuess={pokemonToGuess} currentIndexEditingWord={currentIndexEditingWord}></Board>
+    <>
+      <Box h="var(--height)" minH="inherit" maxH="var(--height)" display="flex" flexDir="column">
+        <p>{pokemonToGuess.name}</p>
+        <Box flex={1} pt="20px" overflowY="auto">
+          <Board words={words} pokemonToGuess={pokemonToGuess} currentIndexEditingWord={currentIndexEditingWord}></Board>
+          <Box h="2px"></Box>
+        </Box>
         <Box h="50px" className='flex-center'>
-          {error && <Box color="red" pt="16px">Ce pokemon n'existe pas</Box>}
+          {error && <Box color="red">Ce pokemon n'existe pas</Box>}
+        </Box>
+        <Box pb="50px">
+          <Keyboard onLetterClick={pressLetter} onBackspaceClick={pressBackspace} onEnterClick={pressEnter}></Keyboard>
         </Box>
       </Box>
-      <Box  pb="50px">
-        <Keyboard onLetterClick={pressLetter} onBackspaceClick={pressBackspace} onEnterClick={pressEnter}></Keyboard>
-      </Box>
-    </Box>
+      <Modal isOpen={isOpen} onClose={onClose} isCentered autoFocus={false} closeOnOverlayClick={false} closeOnEsc={false}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Perdu !</ModalHeader>
+          <ModalBody>
+            Vous avez perdus. Voulez vous quand même continuer ou recommencer ?
+          </ModalBody>
+          <ModalFooter>
+            <Button onClick={reset} mr={3}>Recommencer</Button>
+            <Button onClick={continueGame}>Continuer</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
   );
 };
 

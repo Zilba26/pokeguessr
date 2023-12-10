@@ -1,5 +1,9 @@
+:root {
+    --height: calc(100vh - 70px);
+}
+
 .container {
-    min-height: calc(100vh - 70px);
+    min-height: var(--height);
 }
 
 body {

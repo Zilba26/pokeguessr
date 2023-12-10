@@ -10,8 +10,12 @@ interface KeypadProps {
 
 export const Keypad: FC<KeypadProps> = (props: KeypadProps) => {
 
+    const removeFocus = (e: React.FocusEvent<HTMLButtonElement>) => {
+        e.target.blur();
+    }
+
 
     return (
-        <Button w="50px" h="50px">{props.letter}</Button>
+        <Button w="50px" h="50px" onFocus={removeFocus}>{props.letter}</Button>
     )
 }
