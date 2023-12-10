@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Keyboard } from './keyboard/Keyboard';
 import { Box, Button, Center, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Spinner, useDisclosure } from '@chakra-ui/react';
 import Board from './Board';
@@ -14,7 +14,8 @@ const Wordle = () => {
   const service = new PokemonService();
   const [pokemonToGuess, setPokemonToGuess] = useState<Pokemon>(service.getRandomPokemon(pokemons));
   const [error, setError] = useState<boolean>(false);
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const scrollableWrapperRef = useRef(null);
 
   useEffect(() => {
     if (pokemons.length > 0) {
@@ -59,6 +60,12 @@ const Wordle = () => {
   }
 
   useEffect(() => {
+
+    if (scrollableWrapperRef.current) {
+      const scrollElement = scrollableWrapperRef.current as HTMLElement;
+      scrollElement.scrollTo(0, scrollElement.scrollHeight);
+    }
+
     const handleKeyDown = (event: KeyboardEvent) => {
 
       if (event.key === 'Enter') {
@@ -102,7 +109,7 @@ const Wordle = () => {
     <>
       <Box h="var(--height)" minH="inherit" maxH="var(--height)" display="flex" flexDir="column">
         <p>{pokemonToGuess.name}</p>
-        <Box flex={1} pt="20px" overflowY="auto">
+        <Box flex={1} pt="20px" overflowY="auto" ref={scrollableWrapperRef}>
           <Board words={words} pokemonToGuess={pokemonToGuess} currentIndexEditingWord={currentIndexEditingWord}></Board>
           <Box h="2px"></Box>
         </Box>
