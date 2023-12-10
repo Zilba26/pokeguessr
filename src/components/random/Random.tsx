@@ -17,11 +17,14 @@ export const Random: FC<RandomProps> = (props: RandomProps) => {
   const [pokemonList, setPokemonList] = useState<Pokemon[] | null>(null);
   const [selectedPokemon, setSelectedPokemon] = useState<Pokemon | null>(null);
   const [win, setWin] = useState<boolean>(false);
-  const [genSelected, setGenSelected] = useState<boolean[]>([true, true, true, true, true, true, true, true, true]);
 
+  const genSelectedLocal = localStorage.getItem("genSelected");
+  const [genSelected, setGenSelected] = useState<boolean[]>(
+    genSelectedLocal ? JSON.parse(genSelectedLocal) : [true, true, true, true, true, true, true, true, true]);
+    
   const pokemonData = useDataPokemon();
   const service = new PokemonService();
-  const [pokemons, setPokemons] = useState<Pokemon[]>(pokemonData);
+  const [pokemons, setPokemons] = useState<Pokemon[]>(pokemonData.filter((pokemon: Pokemon) => genSelected[pokemon.generation - 1]));
   const [pokemonToGuess, setPokemonToGuess] = useState<Pokemon>(service.getRandomPokemon(pokemonData));
 
   useEffect(() => {

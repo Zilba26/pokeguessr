@@ -12,9 +12,13 @@ const Wordle = () => {
 
   const [words, setWords] = useState<string[]>(["", "", "", "", "", ""]);
   const [currentIndexEditingWord, setCurrentIndexEditingWord] = useState<number>(0);
-  const pokemons = useDataPokemon();
+  const pokemonsData = useDataPokemon();
+  const genSelectedLocal = localStorage.getItem("genSelected");
+  const [genSelected, setGenSelected] = useState<boolean[]>(
+    genSelectedLocal ? JSON.parse(genSelectedLocal) : [true, true, true, true, true, true, true, true, true]);
   const service = new PokemonService();
-  const [pokemonToGuess, setPokemonToGuess] = useState<Pokemon>(service.getRandomPokemon(pokemons));
+  const [pokemons, setPokemons] = useState<Pokemon[]>();
+  const [pokemonToGuess, setPokemonToGuess] = useState<Pokemon>();
   const [error, setError] = useState<boolean>(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const scrollableWrapperRef = useRef(null);
@@ -29,13 +33,16 @@ const Wordle = () => {
   const [lettersStatus, setLettersStatus] = useState<Map<string, LettersStatus>>(alphabetMap);
 
   useEffect(() => {
-    if (pokemons.length > 0) {
+    if (pokemonsData.length > 0) {
+      const pokemons = pokemonsData.filter((pokemon: Pokemon) => genSelected[pokemon.generation - 1])
+      setPokemons(pokemons);
+
       const pokemonService = new PokemonService();
       const randomPokemon = pokemonService.getRandomPokemon(pokemons);
-
       setPokemonToGuess(randomPokemon);
     }
-  }, [pokemons]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pokemonsData]);
 
   const pressLetter = (letter: string) => {
     if (!win) {
@@ -58,11 +65,16 @@ const Wordle = () => {
   const pressEnter = () => {
     if (!win) {
       setError(false);
-      const enterPokemon = pokemons.find((pokemon) => {
+      const enterPokemon = pokemons!.find((pokemon) => {
         return pokemon.equalsName(words[currentIndexEditingWord]);
       });
       if (enterPokemon) {
         updateLettersStatus();
+        if (enterPokemon.equals(pokemonToGuess!)) {
+          setWin(true);
+          onOpen();
+          return;
+        }
         setCurrentIndexEditingWord(currentIndexEditingWord + 1);
         if (currentIndexEditingWord === 5) {
           onOpen();
@@ -78,7 +90,7 @@ const Wordle = () => {
 
   const updateLettersStatus = () => {
     const word = words[currentIndexEditingWord].toUpperCase();
-    const pokemonName = pokemonToGuess.name.toUpperCase();
+    const pokemonName = pokemonToGuess!.name.toUpperCase();
     for (let i = 0; i < word.length; i++) {
       const letter = word.charAt(i);
       if (pokemonName.charAt(i) === letter) {
@@ -117,12 +129,16 @@ const Wordle = () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentIndexEditingWord, words, pokemons]);
+  }, [currentIndexEditingWord, words, pokemons, win]);
 
   const reset = () => {
     setWords(["", "", "", "", "", ""]);
     setCurrentIndexEditingWord(0);
+    const pokemons = pokemonsData.filter((pokemon: Pokemon) => genSelected[pokemon.generation - 1]);
+    setPokemons(pokemons);
     setPokemonToGuess(service.getRandomPokemon(pokemons));
+    setLettersStatus(new Map(alphabetMap));
+    setWin(false);
     onClose();
   }
 
@@ -136,7 +152,7 @@ const Wordle = () => {
   }
 
 
-  if (pokemons.length === 0 || !pokemonToGuess) {
+  if (!pokemons || pokemons.length === 0 || !pokemonToGuess) {
     return <Center h="100%" minH="inherit">
       <Spinner size="xl" />
     </Center>;
@@ -147,13 +163,13 @@ const Wordle = () => {
       <Box h="var(--height)" minH="inherit" maxH="var(--height)" display="flex" flexDir="column">
         <Box h="20px"></Box>
         <Box className='flex-center'>
-          <GenSelect></GenSelect>
+          <GenSelect triggerChange={setGenSelected}></GenSelect>
           <Box w="10px"></Box>
           <IconButton w={50} h={50} fontSize="20px" aria-label="Recommencer" icon={<MdRefresh/>} onClick={reset} onFocus={removeFocus}></IconButton>
         </Box>
         <Box h="20px"></Box>
         <Box overflowY="auto" ref={scrollableWrapperRef} flex={1}>
-          <Box className='flex-center' h="100%">
+          <Box className='flex-center'>
             <Board words={words} pokemonToGuess={pokemonToGuess} currentIndexEditingWord={currentIndexEditingWord} error={error}></Board>
           </Box>
         </Box>
@@ -165,13 +181,15 @@ const Wordle = () => {
       <Modal isOpen={isOpen} onClose={onClose} isCentered autoFocus={false} closeOnOverlayClick={false} closeOnEsc={false}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Perdu !</ModalHeader>
+          <ModalHeader>{win ? "Gagné !" : "Perdu !"}</ModalHeader>
           <ModalBody>
-            Vous avez perdus. Voulez vous quand même continuer ou recommencer ?
+            {win 
+            ? "Vous avez gagnés. Voulez vous recommencer ?"
+            : "Vous avez perdus. Voulez vous quand même continuer ou recommencer ?"}
           </ModalBody>
           <ModalFooter>
-            <Button onClick={reset} mr={3}>Recommencer</Button>
-            <Button onClick={continueGame}>Continuer</Button>
+            <Button onClick={win ? onClose : reset} mr={3}>{win ? "Fermer" : "Recommencer"}</Button>
+            <Button onClick={win ? reset : continueGame}>{win ? "Recommencer" : "Continuer"}</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
