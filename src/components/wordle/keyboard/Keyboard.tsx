@@ -20,9 +20,9 @@ export const Keyboard: FC<KeyboardProps> = (props: KeyboardProps) => {
     const status = props.lettersStatus.get(letter);
     switch (status) {
       case "good":
-        return "red.500";
+        return "red.500 !important";
       case "bad spot":
-        return "yellow.500";
+        return "yellow.500 !important";
       case "pending":
         return "none";
       case "not good":
