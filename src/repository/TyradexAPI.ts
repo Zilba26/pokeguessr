@@ -3,7 +3,7 @@ import { Type } from "../models/Type";
 import { PokemonAPI } from "./PokemonAPI";
 
 export class TyradexAPI implements PokemonAPI {
-    url: string = "https://tyradex.tech/api/v1/";
+    url: string = "https://tyradex.vercel.app/api/v1/";
 
     async getPokemon(id: number): Promise<Pokemon> {
         const url = this.url + "pokemon/" + id;
