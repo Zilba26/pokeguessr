@@ -4,7 +4,7 @@ import './Pokeguess.css'
 import { Box, useColorMode, useColorModeValue } from '@chakra-ui/react'
 import { animated, useSpring } from 'react-spring'
 
-interface CustomTdProps extends PropsWithChildren{
+interface CustomTdProps extends PropsWithChildren {
   bg?: string,
   index: number,
   arrowHigh?: boolean,
@@ -23,9 +23,70 @@ const CustomTd: FC<CustomTdProps> = (props) => {
 
   const getArrow = () => {
     if (props.arrowHigh == true) {
-      return <Box pos="absolute" top="-10px" left="calc(50% - 10px)" w="0" h="0" borderLeft="10px solid transparent" borderRight="10px solid transparent" borderBottom="10px solid white" />
+      return <Box
+        pos="absolute"
+        w="40px"
+        h="60px"
+        top="calc(50% - 30px)"
+        left="calc(50% - 20px)"
+      >
+        {/* Corps */}
+        <Box
+          pos="absolute"
+          top="50px"          // commence après la pointe
+          left="50%"
+          transform="translateX(-50%)"
+          w="22px"
+          h="14px"
+          bg="rgba(0, 0, 0, 0.35)"
+        />
+
+        {/* Pointe */}
+        <Box
+          pos="absolute"
+          top="0"
+          left="50%"
+          transform="translateX(-50%)"
+          w="0"
+          h="0"
+          borderLeft="28px solid transparent"
+          borderRight="28px solid transparent"
+          borderBottom="50px solid rgba(0, 0, 0, 0.35)"
+        />
+      </Box>
     } else if (props.arrowHigh == false) {
-      return <Box pos="absolute" bottom="-10px" left="calc(50% - 10px)" w="0" h="0" borderLeft="10px solid transparent" borderRight="10px solid transparent" borderTop="10px solid white" />
+      return <Box
+        pos="absolute"
+        w="56px"
+        h="64px"
+        top="calc(50% - 32px)"
+        left="calc(50% - 28px)"
+      >
+        {/* Corps */}
+        <Box
+          pos="absolute"
+          top="0"
+          left="50%"
+          transform="translateX(-50%)"
+          w="22px"
+          h="14px"
+          bg="rgba(0, 0, 0, 0.35)"
+        />
+
+        {/* Pointe */}
+        <Box
+          pos="absolute"
+          bottom="0"
+          left="50%"
+          transform="translateX(-50%)"
+          w="0"
+          h="0"
+          borderLeft="28px solid transparent"
+          borderRight="28px solid transparent"
+          borderTop="50px solid rgba(0, 0, 0, 0.35)"
+        />
+      </Box>
+
     } else {
       return <></>
     }
@@ -35,8 +96,8 @@ const CustomTd: FC<CustomTdProps> = (props) => {
   return (
     <animated.div style={animationProps}>
       <Box m="10px" className='customTD' pos="relative">
-        <Box textAlign="center" bg={props.bg} border="2px" borderColor={boColor} borderRadius="8px" w="80px" h="80px" 
-          display="flex" alignItems="center" justifyContent="center" p="10px" color="white">
+        <Box textAlign="center" bg={props.bg} border="2px" borderColor={boColor} borderRadius="8px" w="80px" h="80px"
+          display="flex" alignItems="center" justifyContent="center" p="10px" color="white" fontWeight='500'>
           {props.children}
         </Box>
         {getArrow()}
@@ -46,8 +107,8 @@ const CustomTd: FC<CustomTdProps> = (props) => {
 }
 
 interface PokeguessProps {
-    pokemonGuess: Pokemon
-    pokemonToGuess: Pokemon
+  pokemonGuess: Pokemon
+  pokemonToGuess: Pokemon
 }
 
 export const Pokeguess: FC<PokeguessProps> = (props: PokeguessProps) => {
@@ -62,9 +123,14 @@ export const Pokeguess: FC<PokeguessProps> = (props: PokeguessProps) => {
 
   const pg = props.pokemonGuess;
   const ptg = props.pokemonToGuess;
-  
 
-  const getArrow = (nb: number) => {
+
+  const getArrow = (nbStr: any, nbStrToGuess: any) => {
+    // parse number from string (format) "12.3 m" or "45.6 kg"
+    const num1 = parseFloat(nbStr.split(" ")[0]);
+    const num2 = parseFloat(nbStrToGuess.split(" ")[0]);
+    const nb = num1 - num2;
+    console.log(num1, num2, nb);
     if (nb > 0) {
       return false
     } else if (nb < 0) {
@@ -81,8 +147,8 @@ export const Pokeguess: FC<PokeguessProps> = (props: PokeguessProps) => {
       <CustomTd index={2} bg={getColor(pg.types[1], ptg.types[1])}>{pg.types[1] ?? "Aucun"}</CustomTd>
       <CustomTd index={3} bg={getColor(pg.generation, ptg.generation)}>{pg.generation}</CustomTd>
       <CustomTd index={4} bg={getColor(pg.evolutionStage, ptg.evolutionStage)}>{pg.evolutionStage}</CustomTd>
-      <CustomTd index={5} bg={getColor(pg.weight, ptg.weight)}>{pg.weight}</CustomTd>
-      <CustomTd index={6} bg={getColor(pg.height, ptg.height)} arrowHigh={getArrow(pg.height - ptg.height)}>{pg.height}</CustomTd>
+      <CustomTd index={5} bg={getColor(pg.weight, ptg.weight)} arrowHigh={getArrow(pg.weight, ptg.weight)}>{pg.weight}</CustomTd>
+      <CustomTd index={6} bg={getColor(pg.height, ptg.height)} arrowHigh={getArrow(pg.height, ptg.height)}>{pg.height}</CustomTd>
     </Box>
   )
 }
