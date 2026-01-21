@@ -126,11 +126,9 @@ export const Pokeguess: FC<PokeguessProps> = (props: PokeguessProps) => {
 
 
   const getArrow = (nbStr: any, nbStrToGuess: any) => {
-    // parse number from string (format) "12.3 m" or "45.6 kg"
-    const num1 = parseFloat(nbStr.split(" ")[0]);
-    const num2 = parseFloat(nbStrToGuess.split(" ")[0]);
+    const num1 = parseFloat(nbStr.split(" ")[0].replace(",", "."));
+    const num2 = parseFloat(nbStrToGuess.split(" ")[0].replace(",", "."));
     const nb = num1 - num2;
-    console.log(num1, num2, nb);
     if (nb > 0) {
       return false
     } else if (nb < 0) {
