@@ -1,8 +1,8 @@
 import type { VercelRequest } from "@vercel/node";
-import { prisma, selectPokemonDetails } from "../prisma.ts";
+import { prisma, selectPokemonDetails } from "../lib/prisma.ts";
 import type { ApiContract } from "../../shared/api-contract.ts";
 import { ApiRoutes } from "../../shared/api-routes.ts";
-import { TypedVercelResponse } from "../custom-vercel-response.ts";
+import { TypedVercelResponse } from "../lib/custom-vercel-response.ts";
 
 type Response = ApiContract[typeof ApiRoutes.pokemonById]["response"];
 
