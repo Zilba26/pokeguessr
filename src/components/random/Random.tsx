@@ -164,8 +164,8 @@ export const Random: FC<RandomProps> = (props: RandomProps) => {
           <RandomTD>Type 2</RandomTD>
           <RandomTD>Génération</RandomTD>
           <RandomTD>Stade<br/>d'évolution</RandomTD>
-          <RandomTD>Poids</RandomTD>
-          <RandomTD>Taille</RandomTD>
+          <RandomTD>Poids (Kg)</RandomTD>
+          <RandomTD>Taille (m)</RandomTD>
         </Box>
         <Box className='table-body' display="flex" flexDir="column-reverse">
           {pokemonsGuess.map((pokemon: Pokemon) => {

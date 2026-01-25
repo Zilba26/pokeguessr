@@ -1,0 +1,150 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model generations {
+  id              Int               @id @default(autoincrement())
+  main_region_id  Int
+  identifier      String
+  pokemon_species pokemon_species[]
+  types           types[]
+}
+
+model pokemon {
+  id              Int              @id @default(autoincrement())
+  identifier      String
+  species_id      Int?
+  height          Int
+  weight          Int
+  base_experience Int
+  order           Int
+  is_default      Boolean
+  pokemon_species pokemon_species? @relation(fields: [species_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  pokemon_stats   pokemon_stats[]
+  pokemon_types   pokemon_types[]
+
+  @@index([is_default], map: "ix_pokemon_is_default")
+  @@index([order], map: "ix_pokemon_order")
+}
+
+model pokemon_colors {
+  id              Int               @id @default(autoincrement())
+  identifier      String
+  pokemon_species pokemon_species[]
+}
+
+model pokemon_habitat_names {
+  pokemon_habitat_id Int
+  local_language_id  Int
+  name               String
+  pokemon_habitats   pokemon_habitats @relation(fields: [pokemon_habitat_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([pokemon_habitat_id, local_language_id])
+  @@index([name], map: "ix_pokemon_habitat_names_name")
+}
+
+model pokemon_habitats {
+  id                    Int                     @id @default(autoincrement())
+  identifier            String
+  pokemon_habitat_names pokemon_habitat_names[]
+  pokemon_species       pokemon_species[]
+}
+
+model pokemon_species {
+  id                      Int                     @id @default(autoincrement())
+  identifier              String
+  generation_id           Int?
+  evolves_from_species_id Int?
+  evolution_chain_id      Int?
+  color_id                Int
+  shape_id                Int?
+  habitat_id              Int?
+  gender_rate             Int
+  capture_rate            Int
+  base_happiness          Int
+  is_baby                 Boolean
+  hatch_counter           Int
+  has_gender_differences  Boolean
+  growth_rate_id          Int
+  forms_switchable        Boolean
+  is_legendary            Boolean
+  is_mythical             Boolean
+  order                   Int
+  conquest_order          Int?
+  pokemon                 pokemon[]
+  pokemon_habitats        pokemon_habitats?       @relation(fields: [habitat_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  pokemon_colors          pokemon_colors          @relation(fields: [color_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  pre_evolution           pokemon_species?        @relation("pokemon_speciesTopokemon_species", fields: [evolves_from_species_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  other_pokemon_species   pokemon_species[]       @relation("pokemon_speciesTopokemon_species")
+  generations             generations?            @relation(fields: [generation_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  pokemon_species_names   pokemon_species_names[]
+
+  @@index([order], map: "ix_pokemon_species_order")
+  @@index([conquest_order], map: "ix_pokemon_species_conquest_order")
+}
+
+model pokemon_species_names {
+  pokemon_species_id Int
+  local_language_id  Int
+  name               String?
+  genus              String?
+  pokemon_species    pokemon_species @relation(fields: [pokemon_species_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([pokemon_species_id, local_language_id])
+  @@index([name], map: "ix_pokemon_species_names_name")
+}
+
+model pokemon_stats {
+  pokemon_id Int
+  stat_id    Int
+  base_stat  Int
+  effort     Int
+  stats      stats   @relation(fields: [stat_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  pokemon    pokemon @relation(fields: [pokemon_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([pokemon_id, stat_id])
+}
+
+model pokemon_types {
+  pokemon_id Int
+  type_id    Int
+  slot       Int
+  types      types   @relation(fields: [type_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  pokemon    pokemon @relation(fields: [pokemon_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([pokemon_id, slot])
+}
+
+model stats {
+  id              Int             @id @default(autoincrement())
+  damage_class_id Int?
+  identifier      String
+  is_battle_only  Boolean
+  game_index      Int?
+  pokemon_stats   pokemon_stats[]
+}
+
+model types {
+  id              Int             @id @default(autoincrement())
+  identifier      String
+  generation_id   Int
+  damage_class_id Int?
+  pokemon_types   pokemon_types[]
+  type_names      type_names[]
+  generations     generations     @relation(fields: [generation_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model type_names {
+  type_id           Int
+  local_language_id Int
+  name              String
+  types             types  @relation(fields: [type_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([type_id, local_language_id])
+  @@index([name], map: "ix_type_names_name")
+}

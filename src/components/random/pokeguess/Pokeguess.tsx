@@ -125,13 +125,11 @@ export const Pokeguess: FC<PokeguessProps> = (props: PokeguessProps) => {
   const ptg = props.pokemonToGuess;
 
 
-  const getArrow = (nbStr: any, nbStrToGuess: any) => {
-    const num1 = parseFloat(nbStr.split(" ")[0].replace(",", "."));
-    const num2 = parseFloat(nbStrToGuess.split(" ")[0].replace(",", "."));
-    const nb = num1 - num2;
-    if (nb > 0) {
+  const getArrow = (nb: number, nbToGuess: number) => {
+    const diff = nb - nbToGuess;
+    if (diff > 0) {
       return false
-    } else if (nb < 0) {
+    } else if (diff < 0) {
       return true
     } else {
       return undefined;
