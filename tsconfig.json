@@ -22,6 +22,6 @@
 
     "esModuleInterop": true
   },
-  "include": ["src", "shared"],
+  "include": ["src", "shared", "generated"],
   "references": [{ "path": "./tsconfig.node.json" }],
 }
