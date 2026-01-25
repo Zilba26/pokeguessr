@@ -1,7 +1,16 @@
+import fs from "node:fs";
+import path from "node:path";
 import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 import { PrismaClient } from "../../generated/prisma/client.js";
 
-const connectionString = "file:./prisma/pokedex.sqlite";
+const TMP_DB_PATH = "/tmp/pokedex.sqlite";
+
+if (!fs.existsSync(TMP_DB_PATH) && process.env.VERCEL === "1") {
+  const source = path.join(process.cwd(), "prisma/pokedex.sqlite");
+  fs.copyFileSync(source, TMP_DB_PATH);
+}
+
+const connectionString = process.env.VERCEL === "1" ? `file:${TMP_DB_PATH}` : "file:./prisma/pokedex.sqlite";
 
 const adapter = new PrismaBetterSqlite3({ url: connectionString });
 const prisma = new PrismaClient({ adapter });
