@@ -20,20 +20,6 @@ export class TyradexAPI implements PokemonAPI {
         return json.map((pokemon: any) => this.parsePokemon(pokemon));
     }
 
-    async getAllGenerationPokemon(generation: Generation): Promise<Pokemon[]> {
-        const url = this.url + "gen/" + generation;
-        const response = await fetch(url);
-        const json = await response.json();
-        return []
-    }
-
-    async getGenerations(): Promise<Generation[]> {
-        const url = this.url + "gen";
-        const response = await fetch(url);
-        const json = await response.json();
-        return [];
-    }
-
     private parsePokemon(json: any): Pokemon {
         const types = json.types.map((type: any) => Type.getTypeByName(type.name));
         return new Pokemon(json.pokedexId, json.name.fr, json.sprites.regular, types, json.weight, json.height,

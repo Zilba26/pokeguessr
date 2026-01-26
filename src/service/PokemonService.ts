@@ -1,9 +1,10 @@
 import { Pokemon } from "../models/Pokemon";
 import { PokemonAPI } from "../repository/PokemonAPI";
+import { SqliteAPI } from "../repository/SqliteAPI";
 import { TyradexAPI } from "../repository/TyradexAPI";
 
 export class PokemonService {
-  private readonly pokemonRepository: PokemonAPI = new TyradexAPI();
+  private readonly pokemonRepository: PokemonAPI = new SqliteAPI();
 
   public async getPokemonsByGenSelected(genSelected: boolean[]): Promise<Pokemon[]> {
     const pokemons: Pokemon[] = await this.pokemonRepository.getAllPokemon();

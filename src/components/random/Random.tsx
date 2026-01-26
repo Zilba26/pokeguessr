@@ -3,10 +3,11 @@ import React, { FC, PropsWithChildren, useEffect, useState } from 'react'
 import './Random.scss'
 import { Pokeguess } from './pokeguess/Pokeguess';
 import { Pokemon } from '../../models/Pokemon';
-import { Box, Button, Input, useColorModeValue, Image, Spinner, Center } from '@chakra-ui/react';
+import { Box, Button, Input, useColorModeValue, Image, Spinner, Center, useToast } from '@chakra-ui/react';
 import { PokemonService } from '../../service/PokemonService';
 import { useDataPokemon } from '../../context/DataContext';
 import GenSelect from '../gen-select/GenSelect';
+import { HelpTooltip } from '../utils/HelpTooltip';
 
 interface RandomProps {
 }
@@ -26,6 +27,8 @@ export const Random: FC<RandomProps> = (props: RandomProps) => {
   const service = new PokemonService();
   const [pokemons, setPokemons] = useState<Pokemon[]>(pokemonData.filter((pokemon: Pokemon) => genSelected[pokemon.generation - 1]));
   const [pokemonToGuess, setPokemonToGuess] = useState<Pokemon>(service.getRandomPokemon(pokemonData));
+
+  const toast = useToast();
 
   useEffect(() => {
     if (pokemonData.length > 0) {
@@ -107,6 +110,13 @@ export const Random: FC<RandomProps> = (props: RandomProps) => {
     setPokemonToGuess(pokemonToGuess);
     setPokemonsGuess([]);
     setWin(false);
+    toast({
+      title: "Le pokémon a été regénéré !",
+      status: "info",
+      duration: 2000,
+      isClosable: true,
+      position: "top",
+    });
   }
 
   const border = useColorModeValue('black', 'white');
@@ -164,8 +174,10 @@ export const Random: FC<RandomProps> = (props: RandomProps) => {
           <RandomTD>Type 2</RandomTD>
           <RandomTD>Génération</RandomTD>
           <RandomTD>Stade<br/>d'évolution</RandomTD>
-          <RandomTD>Poids</RandomTD>
-          <RandomTD>Taille</RandomTD>
+          <RandomTD>Couleur</RandomTD>
+          <RandomTD>Habitat <HelpTooltip text="Seuls les pokemons de la 1ère à la 3ème génération ont un habitat défini." /></RandomTD>
+          <RandomTD>Poids (Kg)</RandomTD>
+          <RandomTD>Taille (m)</RandomTD>
         </Box>
         <Box className='table-body' display="flex" flexDir="column-reverse">
           {pokemonsGuess.map((pokemon: Pokemon) => {
@@ -180,7 +192,7 @@ export const Random: FC<RandomProps> = (props: RandomProps) => {
 
 const RandomTD: FC<PropsWithChildren> = (props: PropsWithChildren) => {
   return (
-    <Box w="100px" h="50px" border="0px" borderColor="white" display="flex" justifyContent="center" alignItems="center" textAlign="center">
+    <Box w="110px" h="50px" border="0px" borderColor="white" display="flex" justifyContent="center" alignItems="center" textAlign="center">
       {props.children}
     </Box>
   )

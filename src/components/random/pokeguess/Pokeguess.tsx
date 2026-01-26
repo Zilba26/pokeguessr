@@ -96,7 +96,7 @@ const CustomTd: FC<CustomTdProps> = (props) => {
   return (
     <animated.div style={animationProps}>
       <Box m="10px" className='customTD' pos="relative">
-        <Box textAlign="center" bg={props.bg} border="2px" borderColor={boColor} borderRadius="8px" w="80px" h="80px"
+        <Box textAlign="center" bg={props.bg} border="2px" borderColor={boColor} borderRadius="8px" w="90px" h="90px"
           display="flex" alignItems="center" justifyContent="center" p="10px" color="white" fontWeight='500'>
           {props.children}
         </Box>
@@ -125,13 +125,11 @@ export const Pokeguess: FC<PokeguessProps> = (props: PokeguessProps) => {
   const ptg = props.pokemonToGuess;
 
 
-  const getArrow = (nbStr: any, nbStrToGuess: any) => {
-    const num1 = parseFloat(nbStr.split(" ")[0].replace(",", "."));
-    const num2 = parseFloat(nbStrToGuess.split(" ")[0].replace(",", "."));
-    const nb = num1 - num2;
-    if (nb > 0) {
+  const getArrow = (nb: number, nbToGuess: number) => {
+    const diff = nb - nbToGuess;
+    if (diff > 0) {
       return false
-    } else if (nb < 0) {
+    } else if (diff < 0) {
       return true
     } else {
       return undefined;
@@ -145,8 +143,10 @@ export const Pokeguess: FC<PokeguessProps> = (props: PokeguessProps) => {
       <CustomTd index={2} bg={getColor(pg.types[1], ptg.types[1])}>{pg.types[1] ?? "Aucun"}</CustomTd>
       <CustomTd index={3} bg={getColor(pg.generation, ptg.generation)}>{pg.generation}</CustomTd>
       <CustomTd index={4} bg={getColor(pg.evolutionStage, ptg.evolutionStage)}>{pg.evolutionStage}</CustomTd>
-      <CustomTd index={5} bg={getColor(pg.weight, ptg.weight)} arrowHigh={getArrow(pg.weight, ptg.weight)}>{pg.weight}</CustomTd>
-      <CustomTd index={6} bg={getColor(pg.height, ptg.height)} arrowHigh={getArrow(pg.height, ptg.height)}>{pg.height}</CustomTd>
+      <CustomTd index={5} bg={getColor(pg.color, ptg.color)}>{pg.color}</CustomTd>
+      <CustomTd index={6} bg={getColor(pg.habitat, ptg.habitat)}>{pg.habitat}</CustomTd>
+      <CustomTd index={7} bg={getColor(pg.weight, ptg.weight)} arrowHigh={getArrow(pg.weight, ptg.weight)}>{pg.weight}</CustomTd>
+      <CustomTd index={8} bg={getColor(pg.height, ptg.height)} arrowHigh={getArrow(pg.height, ptg.height)}>{pg.height}</CustomTd>
     </Box>
   )
 }
