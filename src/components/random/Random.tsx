@@ -3,7 +3,7 @@ import React, { FC, PropsWithChildren, useEffect, useState } from 'react'
 import './Random.scss'
 import { Pokeguess } from './pokeguess/Pokeguess';
 import { Pokemon } from '../../models/Pokemon';
-import { Box, Button, Input, useColorModeValue, Image, Spinner, Center } from '@chakra-ui/react';
+import { Box, Button, Input, useColorModeValue, Image, Spinner, Center, useToast } from '@chakra-ui/react';
 import { PokemonService } from '../../service/PokemonService';
 import { useDataPokemon } from '../../context/DataContext';
 import GenSelect from '../gen-select/GenSelect';
@@ -27,6 +27,8 @@ export const Random: FC<RandomProps> = (props: RandomProps) => {
   const service = new PokemonService();
   const [pokemons, setPokemons] = useState<Pokemon[]>(pokemonData.filter((pokemon: Pokemon) => genSelected[pokemon.generation - 1]));
   const [pokemonToGuess, setPokemonToGuess] = useState<Pokemon>(service.getRandomPokemon(pokemonData));
+
+  const toast = useToast();
 
   useEffect(() => {
     if (pokemonData.length > 0) {
@@ -108,6 +110,13 @@ export const Random: FC<RandomProps> = (props: RandomProps) => {
     setPokemonToGuess(pokemonToGuess);
     setPokemonsGuess([]);
     setWin(false);
+    toast({
+      title: "Le pokémon a été regénéré !",
+      status: "info",
+      duration: 2000,
+      isClosable: true,
+      position: "top",
+    });
   }
 
   const border = useColorModeValue('black', 'white');
