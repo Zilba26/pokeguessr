@@ -32,7 +32,9 @@ export class SqliteAPI implements PokemonAPI {
             pokemon!.height / 10,
             pokemon!.pokemon_species!.generations!.id as Generation,
             "",
-            SqliteAPI.getEvolutionStage(pokemon.pokemon_species!)
+            SqliteAPI.getEvolutionStage(pokemon.pokemon_species!),
+            pokemon.pokemon_species!.pokemon_colors!.pokemon_color_names[0].name,
+            pokemon.pokemon_species?.pokemon_habitats?.pokemon_habitat_names[0]?.name || "Inconnu"
         );
     }
 

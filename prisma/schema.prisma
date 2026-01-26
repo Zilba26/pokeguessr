@@ -1,9 +1,9 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
-  runtime           = "nodejs"
-  moduleFormat      = "esm"
+  provider            = "prisma-client"
+  output              = "../generated/prisma"
   importFileExtension = "js"
+  moduleFormat        = "esm"
+  runtime             = "nodejs"
 }
 
 datasource db {
@@ -36,9 +36,10 @@ model pokemon {
 }
 
 model pokemon_colors {
-  id              Int               @id @default(autoincrement())
-  identifier      String
-  pokemon_species pokemon_species[]
+  id                  Int                   @id @default(autoincrement())
+  identifier          String
+  pokemon_color_names pokemon_color_names[]
+  pokemon_species     pokemon_species[]
 }
 
 model pokemon_habitat_names {
@@ -150,4 +151,14 @@ model type_names {
 
   @@id([type_id, local_language_id])
   @@index([name], map: "ix_type_names_name")
+}
+
+model pokemon_color_names {
+  pokemon_color_id  Int
+  local_language_id Int
+  name              String
+  pokemon_colors    pokemon_colors @relation(fields: [pokemon_color_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([pokemon_color_id, local_language_id])
+  @@index([name], map: "ix_pokemon_color_names_name")
 }

@@ -5,9 +5,11 @@ export type PokemonDetailsDTO = {
     pokemon_species: {
         id: number;
         pokemon_habitats: {
-            id: number;
-            identifier: string;
+            pokemon_habitat_names: { name: string | null; }[];
         } | null;
+        pokemon_colors: {
+            pokemon_color_names: { name: string; }[];
+        };
         pre_evolution: {
             id: number;
             pre_evolution: {

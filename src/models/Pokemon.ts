@@ -10,9 +10,11 @@ export class Pokemon {
     generation: Generation;
     description: string;
     evolutionStage: EvolutionStage;
+    color: string;
+    habitat: string;
 
     constructor(id: number, name: string, sprite: string, types: Type[], weight: number, height: number, 
-        generation: Generation, description: string, evolutionStage: EvolutionStage) {
+        generation: Generation, description: string, evolutionStage: EvolutionStage, color: string, habitat: string) {
         this.pokedexId = id;
         this.name = name;
         this.sprite = sprite;
@@ -22,6 +24,8 @@ export class Pokemon {
         this.generation = generation;
         this.description = description;
         this.evolutionStage = evolutionStage;
+        this.color = color;
+        this.habitat = habitat;
     }
 
     public equals(pokemon: Pokemon): boolean {

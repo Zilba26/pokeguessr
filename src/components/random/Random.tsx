@@ -164,6 +164,8 @@ export const Random: FC<RandomProps> = (props: RandomProps) => {
           <RandomTD>Type 2</RandomTD>
           <RandomTD>Génération</RandomTD>
           <RandomTD>Stade<br/>d'évolution</RandomTD>
+          <RandomTD>Couleur</RandomTD>
+          <RandomTD>Habitat</RandomTD>
           <RandomTD>Poids (Kg)</RandomTD>
           <RandomTD>Taille (m)</RandomTD>
         </Box>
@@ -180,7 +182,7 @@ export const Random: FC<RandomProps> = (props: RandomProps) => {
 
 const RandomTD: FC<PropsWithChildren> = (props: PropsWithChildren) => {
   return (
-    <Box w="100px" h="50px" border="0px" borderColor="white" display="flex" justifyContent="center" alignItems="center" textAlign="center">
+    <Box w="110px" h="50px" border="0px" borderColor="white" display="flex" justifyContent="center" alignItems="center" textAlign="center">
       {props.children}
     </Box>
   )
