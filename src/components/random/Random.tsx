@@ -7,6 +7,7 @@ import { Box, Button, Input, useColorModeValue, Image, Spinner, Center } from '@
 import { PokemonService } from '../../service/PokemonService';
 import { useDataPokemon } from '../../context/DataContext';
 import GenSelect from '../gen-select/GenSelect';
+import { HelpTooltip } from '../utils/HelpTooltip';
 
 interface RandomProps {
 }
@@ -165,7 +166,7 @@ export const Random: FC<RandomProps> = (props: RandomProps) => {
           <RandomTD>Génération</RandomTD>
           <RandomTD>Stade<br/>d'évolution</RandomTD>
           <RandomTD>Couleur</RandomTD>
-          <RandomTD>Habitat</RandomTD>
+          <RandomTD>Habitat <HelpTooltip text="Seuls les pokemons de la 1ère à la 3ème génération ont un habitat défini." /></RandomTD>
           <RandomTD>Poids (Kg)</RandomTD>
           <RandomTD>Taille (m)</RandomTD>
         </Box>
