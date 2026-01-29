@@ -34,6 +34,8 @@ export const Random: FC<RandomProps> = (props: RandomProps) => {
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  const [attributs, setAttributs] = useState(LocalStorageService.getSetName());
+
   useEffect(() => {
     if (pokemonData.length > 0) {
       const pokemonService = new PokemonService();
@@ -114,6 +116,7 @@ export const Random: FC<RandomProps> = (props: RandomProps) => {
     setPokemonToGuess(pokemonToGuess);
     setPokemonsGuess([]);
     setWin(false);
+    setAttributs(LocalStorageService.getSetName());
     toast({
       title: "Le pokémon a été regénéré !",
       status: "info",
@@ -177,13 +180,13 @@ export const Random: FC<RandomProps> = (props: RandomProps) => {
         <Box>
           <Box className='table-head' display="flex" gap="10px">
             <RandomTD>Pokemon</RandomTD>
-            {LocalStorageService.getSetName().flatMap((attribut: PokemonAttribut<any>, index: number) => attribut.columns).map((col, colIndex) => (
+            {attributs.flatMap((attribut: PokemonAttribut<any>, index: number) => attribut.columns).map((col, colIndex) => (
               <RandomTD key={`${colIndex}`}>{col.label}</RandomTD>
             ))}
           </Box>
           <Box className='table-body' display="flex" flexDir="column-reverse">
             {pokemonsGuess.map((pokemon: Pokemon) => {
-              return <Pokeguess key={pokemon.pokedexId} pokemonGuess={pokemon} pokemonToGuess={pokemonToGuess} />
+              return <Pokeguess key={pokemon.pokedexId} attributs={attributs} pokemonGuess={pokemon} pokemonToGuess={pokemonToGuess} />
             })}
           </Box>
         </Box>

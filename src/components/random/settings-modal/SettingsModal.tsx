@@ -1,4 +1,4 @@
-import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, Box, Select, Button, IconButton, Icon, ModalFooter, Divider } from "@chakra-ui/react";
+import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, Box, Select, Button, IconButton, Icon, ModalFooter, Divider, useToast } from "@chakra-ui/react";
 import { FC, useRef, useState } from "react";
 import { PokemonAttribut } from "../../../models/PokemonAttribut";
 import { LocalStorageService } from "../../../service/LocalStorageService";
@@ -17,6 +17,7 @@ export const SettingsModal: FC<SettingsModalProps> = (props: SettingsModalProps)
   const [attributs, setAttributs] = useState(LocalStorageService.getSetName());
   const attributSetToLoadRef = useRef<HTMLSelectElement>(null);
   const attributToAddRef = useRef<HTMLSelectElement>(null);
+  const toast = useToast();
 
   const loadSetAttribut = (setName: string) => {
     const setAttributsToLoad = LocalStorageService.getRegisteredSetNames().get(setName);
@@ -38,6 +39,10 @@ export const SettingsModal: FC<SettingsModalProps> = (props: SettingsModalProps)
   const save = () => {
     LocalStorageService.saveSetName(attributs);
     close();
+    toast({
+      title: "Les attributs ont été sauvegardés et seront chargés pour le prochain pokemon !",
+      status: "success",
+    });
   }
 
   const close = () => {

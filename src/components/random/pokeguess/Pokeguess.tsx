@@ -4,7 +4,6 @@ import './Pokeguess.css'
 import { Box, useColorModeValue } from '@chakra-ui/react'
 import { animated, useSpring } from 'react-spring'
 import { PokemonAttribut } from '../../../models/PokemonAttribut'
-import { LocalStorageService } from '../../../service/LocalStorageService'
 
 interface CustomTdProps extends PropsWithChildren {
   bg?: string,
@@ -113,7 +112,7 @@ interface PokeguessProps {
   pokemonGuess: Pokemon
   pokemonToGuess: Pokemon
   isAnimated?: boolean
-  attributs?: PokemonAttribut<any>[]
+  attributs: PokemonAttribut<any>[]
 }
 
 export const Pokeguess: FC<PokeguessProps> = (props: PokeguessProps) => {
@@ -145,7 +144,7 @@ export const Pokeguess: FC<PokeguessProps> = (props: PokeguessProps) => {
     <Box display="flex" gap="10px" id={'pokeguess-' + props.pokemonGuess.pokedexId}>
       <CustomTd index={0} isAnimated={props.isAnimated}><img src={pg.sprite} alt={pg.name} /></CustomTd>
 
-      {(props.attributs ?? LocalStorageService.getSetName()).flatMap((attribut: PokemonAttribut<any>, index: number) => attribut.columns).map((col, colIndex) => {
+      {props.attributs.flatMap((attribut: PokemonAttribut<any>, index: number) => attribut.columns).map((col, colIndex) => {
         const valGuess = col.value(pg);
         const valToGuess = col.value(ptg);
         return <CustomTd key={colIndex} index={colIndex + 1}
