@@ -3,6 +3,7 @@ import { PokemonAPI } from "./PokemonAPI";
 import { apiFetch } from "../../shared/api-client";
 import { ApiRoutes } from "../../shared/api-routes";
 import { PokemonDetailsDTO } from "../../shared/api-types";
+import { PokemonStats } from "../models/PokemonStats";
 
 export class SqliteAPI implements PokemonAPI {
 
@@ -20,7 +21,7 @@ export class SqliteAPI implements PokemonAPI {
         return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokedexId}.png`;
     }
 
-    static mapPokemonRecordToModel(pokemon: PokemonDetailsDTO): Pokemon {
+    private static mapPokemonRecordToModel(pokemon: PokemonDetailsDTO): Pokemon {
         return new Pokemon(
             pokemon!.id,
             pokemon!.pokemon_species!.pokemon_species_names[0].name || "",
@@ -34,11 +35,27 @@ export class SqliteAPI implements PokemonAPI {
             "",
             SqliteAPI.getEvolutionStage(pokemon.pokemon_species!),
             pokemon.pokemon_species!.pokemon_colors!.pokemon_color_names[0].name,
-            pokemon.pokemon_species?.pokemon_habitats?.pokemon_habitat_names[0]?.name || "Inconnu"
+            pokemon.pokemon_species?.pokemon_habitats?.pokemon_habitat_names[0]?.name || "Inconnu",
+            SqliteAPI.mapPokemonStats(pokemon)
         );
     }
 
-    static getEvolutionStage(pokemon: PreEvolution): EvolutionStage {
+    private static mapPokemonStats(pokemon: PokemonDetailsDTO): PokemonStats {
+        const statsMap: { [key: string]: number } = {};
+        for (const stat of pokemon.pokemon_stats) {
+            statsMap[stat.stats.identifier] = stat.base_stat;
+        }
+        return new PokemonStats(
+            statsMap["hp"] || 0,
+            statsMap["attack"] || 0,
+            statsMap["defense"] || 0,
+            statsMap["special-attack"] || 0,
+            statsMap["special-defense"] || 0,
+            statsMap["speed"] || 0
+        );
+    }
+
+    private static getEvolutionStage(pokemon: PreEvolution): EvolutionStage {
         let currentEvolution = pokemon?.pre_evolution;
         if (!currentEvolution) {
             return 1;

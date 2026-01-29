@@ -66,6 +66,16 @@ const selectPokemonDetails = {
                 }
             }
         }
+    },
+    pokemon_stats: {
+        select: {
+            base_stat: true,
+            stats: {
+                select: {
+                    identifier: true
+                }
+            }
+        }
     }
 };
 

@@ -33,5 +33,11 @@ export type PokemonDetailsDTO = {
         types: {
             type_names: { name: string | null; }[];
         };
+    }[],
+    pokemon_stats: {
+        base_stat: number;
+        stats: {
+            identifier: string;
+        };
     }[];
 };

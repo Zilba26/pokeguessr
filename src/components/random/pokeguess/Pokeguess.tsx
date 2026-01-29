@@ -1,13 +1,16 @@
 import { FC, PropsWithChildren } from 'react'
 import { Pokemon } from '../../../models/Pokemon'
 import './Pokeguess.css'
-import { Box, useColorMode, useColorModeValue } from '@chakra-ui/react'
+import { Box, useColorModeValue } from '@chakra-ui/react'
 import { animated, useSpring } from 'react-spring'
+import { PokemonAttribut } from '../../../models/PokemonAttribut'
+import { LocalStorageService } from '../../../service/LocalStorageService'
 
 interface CustomTdProps extends PropsWithChildren {
   bg?: string,
   index: number,
   arrowHigh?: boolean,
+  isAnimated?: boolean
 }
 
 const CustomTd: FC<CustomTdProps> = (props) => {
@@ -94,7 +97,7 @@ const CustomTd: FC<CustomTdProps> = (props) => {
 
 
   return (
-    <animated.div style={animationProps}>
+    <animated.div style={props.isAnimated == false ? {} : animationProps}>
       <Box m="10px" className='customTD' pos="relative">
         <Box textAlign="center" bg={props.bg} border="2px" borderColor={boColor} borderRadius="8px" w="90px" h="90px"
           display="flex" alignItems="center" justifyContent="center" p="10px" color="white" fontWeight='500'>
@@ -109,6 +112,8 @@ const CustomTd: FC<CustomTdProps> = (props) => {
 interface PokeguessProps {
   pokemonGuess: Pokemon
   pokemonToGuess: Pokemon
+  isAnimated?: boolean
+  attributs?: PokemonAttribut<any>[]
 }
 
 export const Pokeguess: FC<PokeguessProps> = (props: PokeguessProps) => {
@@ -138,15 +143,18 @@ export const Pokeguess: FC<PokeguessProps> = (props: PokeguessProps) => {
 
   return (
     <Box display="flex" gap="10px" id={'pokeguess-' + props.pokemonGuess.pokedexId}>
-      <CustomTd index={0}><img src={pg.sprite} alt={pg.name} /></CustomTd>
-      <CustomTd index={1} bg={getColor(pg.types[0], ptg.types[0])}>{pg.types[0]}</CustomTd>
-      <CustomTd index={2} bg={getColor(pg.types[1], ptg.types[1])}>{pg.types[1] ?? "Aucun"}</CustomTd>
-      <CustomTd index={3} bg={getColor(pg.generation, ptg.generation)}>{pg.generation}</CustomTd>
-      <CustomTd index={4} bg={getColor(pg.evolutionStage, ptg.evolutionStage)}>{pg.evolutionStage}</CustomTd>
-      <CustomTd index={5} bg={getColor(pg.color, ptg.color)}>{pg.color}</CustomTd>
-      <CustomTd index={6} bg={getColor(pg.habitat, ptg.habitat)}>{pg.habitat}</CustomTd>
-      <CustomTd index={7} bg={getColor(pg.weight, ptg.weight)} arrowHigh={getArrow(pg.weight, ptg.weight)}>{pg.weight}</CustomTd>
-      <CustomTd index={8} bg={getColor(pg.height, ptg.height)} arrowHigh={getArrow(pg.height, ptg.height)}>{pg.height}</CustomTd>
+      <CustomTd index={0} isAnimated={props.isAnimated}><img src={pg.sprite} alt={pg.name} /></CustomTd>
+
+      {(props.attributs ?? LocalStorageService.getSetName()).flatMap((attribut: PokemonAttribut<any>, index: number) => attribut.columns).map((col, colIndex) => {
+        const valGuess = col.value(pg);
+        const valToGuess = col.value(ptg);
+        return <CustomTd key={colIndex} index={colIndex + 1}
+          bg={getColor(valGuess, valToGuess)}
+          arrowHigh={col.withArrow ? getArrow(valGuess, valToGuess) : undefined}
+          isAnimated={props.isAnimated}>
+          {valGuess}
+        </CustomTd>
+      })}
     </Box>
   )
 }

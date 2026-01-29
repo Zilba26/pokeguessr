@@ -10,6 +10,7 @@ import { ChakraProvider, ColorModeScript } from '@chakra-ui/react'
 import theme from './theme'
 import Wordle from './components/wordle/Wordle'
 import { PokemonProvider } from './context/PokemonContext'
+import { LocalStorageService } from './service/LocalStorageService'
 
 const router = createBrowserRouter([
   {
@@ -28,6 +29,8 @@ const router = createBrowserRouter([
     errorElement: <Redirect />,
   }
 ])
+
+LocalStorageService.init();
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

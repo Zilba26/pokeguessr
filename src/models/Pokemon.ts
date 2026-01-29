@@ -1,3 +1,4 @@
+import { PokemonStats } from "./PokemonStats";
 import { Type } from "./Type";
 
 export class Pokemon {
@@ -12,9 +13,10 @@ export class Pokemon {
     evolutionStage: EvolutionStage;
     color: string;
     habitat: string;
+    stats: PokemonStats;
 
     constructor(id: number, name: string, sprite: string, types: Type[], weight: number, height: number, 
-        generation: Generation, description: string, evolutionStage: EvolutionStage, color: string, habitat: string) {
+        generation: Generation, description: string, evolutionStage: EvolutionStage, color: string, habitat: string, stats: PokemonStats) {
         this.pokedexId = id;
         this.name = name;
         this.sprite = sprite;
@@ -26,6 +28,7 @@ export class Pokemon {
         this.evolutionStage = evolutionStage;
         this.color = color;
         this.habitat = habitat;
+        this.stats = stats;
     }
 
     public equals(pokemon: Pokemon): boolean {
