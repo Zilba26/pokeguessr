@@ -37,6 +37,22 @@ export class LocalStorageService {
         localStorage.setItem(this.POKEGUESS_SETSNAMES_REGISTERED_KEY, JSON.stringify(Object.fromEntries(setNamesToSave)));
     }
 
+    public static saveSetNameWithName(setName: string, attributs: PokemonAttribut<any>[]): boolean {
+        const registeredSetNames = this.getRegisteredSetNames();
+        if (registeredSetNames.has(setName)) {
+            return false;
+        }
+        registeredSetNames.set(setName, attributs);
+        this.saveRegisteredSetNames(registeredSetNames);
+        return true;
+    }
+
+    public static deleteSetName(setName: string): void {
+        const registeredSetNames = this.getRegisteredSetNames();
+        registeredSetNames.delete(setName);
+        this.saveRegisteredSetNames(registeredSetNames);
+    }
+
     public static getRegisteredSetNames(): Map<string, PokemonAttribut<any>[]> {
         const data = localStorage.getItem(this.POKEGUESS_SETSNAMES_REGISTERED_KEY);
         const result: Map<string, PokemonAttribut<any>[]> = new Map();

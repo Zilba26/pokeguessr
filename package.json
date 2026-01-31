@@ -17,6 +17,7 @@
     "@prisma/client": "^7.3.0",
     "@vercel/node": "^5.5.27",
     "better-sqlite3": "^12.6.2",
+    "chakra-react-select": "^5.1.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "react-icons": "^5.5.0",
