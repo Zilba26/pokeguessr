@@ -9,22 +9,24 @@ import { Entity } from '../../models/Entity';
 import { EntityService } from '../../service/EntityService';
 import { GuessStatsAttributs } from './attributs/GuessStatsAttributs';
 
+export interface EntityFilterController<T extends Entity> {
+  filter(entity: T): boolean;
+  render?: () => React.ReactNode;
+}
+
 interface GuessStatsProps<T extends Entity> {
   useData: () => T[];
   service: EntityService<T>;
   getSetName: () => Attribut<any, T>[];
+  filterController?: EntityFilterController<T>;
 }
 
-export function GuessStats<T extends Entity>({ useData, service, getSetName }: GuessStatsProps<T>) {
-
-  // const genSelectedLocal = localStorage.getItem("genSelected");
-  // const [genSelected, setGenSelected] = useState<boolean[]>(
-  //   genSelectedLocal ? JSON.parse(genSelectedLocal) : [true, true, true, true, true, true, true, true, true]);
+export function GuessStats<T extends Entity>({ useData, service, getSetName, filterController }: GuessStatsProps<T>) {
 
   // Toutes les entités disponibles (avant filtre(s))
   const allEntitiesData: T[] = useData();
   // Entités après application des filtres
-  const [entitiesData, setEntitiesData] = useState<T[]>(allEntitiesData.filter((entity: T) => true /*genSelected[entity.generation - 1]*/));
+  const [entitiesData, setEntitiesData] = useState<T[]>(allEntitiesData.filter((entity: T) => filterController?.filter(entity) ?? true));
   // Entité à deviner
   const [entityToFind, setEntityToFind] = useState<T>(service.getRandom(allEntitiesData));
 
@@ -114,7 +116,7 @@ export function GuessStats<T extends Entity>({ useData, service, getSetName }: G
   }
 
   const regenerateEntity = async () => {
-    const entities = allEntitiesData.filter((entity: T) => true /*genSelected[entity.generation - 1]*/);
+    const entities = allEntitiesData.filter((entity: T) => filterController?.filter(entity) ?? true);
     const entityToGuess = service.getRandom(entities);
     setEntitiesData(entities);
     setEntityToFind(entityToGuess);
@@ -147,7 +149,7 @@ export function GuessStats<T extends Entity>({ useData, service, getSetName }: G
         <div className="after"></div>
       </div>
       <div className='random'>
-        {/* <GenSelect triggerChange={setGenSelected}></GenSelect> */}
+        {filterController?.render?.()}
         <Box h="20px"></Box>
         <Box display="flex" gap="10px">
           <Button onClick={regenerateEntity}>Regénérer</Button>
