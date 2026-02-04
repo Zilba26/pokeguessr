@@ -1,4 +1,4 @@
-import { PokemonAttribut } from "../models/PokemonAttribut";
+import { PokemonAttribut } from "../models/pokemon/PokemonAttribut";
 
 export class LocalStorageService {
     private static readonly POKEGUESS_GEN_SELECTED_KEY = "pokeguess_gen_selected";

@@ -5,12 +5,26 @@ import './all.min.css'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import Root from './Root'
 import Redirect from './Redirect'
-import { Random } from './components/random/Random'
 import { ChakraProvider, ColorModeScript } from '@chakra-ui/react'
 import theme from './theme'
-import Wordle from './components/wordle/Wordle'
-import { PokemonProvider } from './context/PokemonContext'
 import { LocalStorageService } from './service/LocalStorageService'
+import { PokemonService } from './service/PokemonService'
+import { PokemonProvider, useDataPokemon } from './context/PokemonContext'
+import { Attribut } from './models/Attribut'
+import { Entity } from './models/Entity'
+import { EntityService } from './service/EntityService'
+import { GuessStats } from './components/guess-stats/GuessStats'
+import { Home2 } from './components/Home2'
+import { Wordle } from './components/wordle/Wordle'
+
+const createRandomRoute = <T extends Entity>(path: string, useData: () => T[], service: EntityService<T>, getSetName: () => Attribut<any, T>[]) => ([{
+  path: path + "/guess-stats",
+  element: <GuessStats<T> useData={useData} service={service} getSetName={getSetName} />,
+}, {
+  path: path + "/wordle",
+  element: <Wordle<T> useData={useData} service={service} />,
+}]);
+
 
 const router = createBrowserRouter([
   {
@@ -18,13 +32,10 @@ const router = createBrowserRouter([
     element: <Root />,
     children: [
       {
-        path: '/',
-        element: <Random />,
+        path: "/",
+        element: <Home2 />,
       },
-      {
-        path: '/wordle',
-        element: <Wordle />,
-      }
+      ...createRandomRoute('/pokemon', useDataPokemon, new PokemonService(), () => LocalStorageService.getSetName()),
     ],
     errorElement: <Redirect />,
   }
@@ -35,8 +46,8 @@ LocalStorageService.init();
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ChakraProvider theme={theme}>
-      <ColorModeScript initialColorMode={theme.config.initialColorMode} />  
-      <PokemonProvider>
+      <ColorModeScript initialColorMode={theme.config.initialColorMode} />
+      <PokemonProvider service={new PokemonService()}>
         <RouterProvider router={router} />
       </PokemonProvider>
     </ChakraProvider>

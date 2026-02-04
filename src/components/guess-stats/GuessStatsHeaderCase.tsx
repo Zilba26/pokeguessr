@@ -1,11 +1,11 @@
 import { Box } from "@chakra-ui/react"
 import { FC, PropsWithChildren } from "react"
 
-interface RandomTDProps extends PropsWithChildren {
+interface GuessStatsHeaderCaseProps extends PropsWithChildren {
   size?: number
 }
 
-export const RandomTD: FC<RandomTDProps> = (props: RandomTDProps) => {
+export const GuessStatsHeaderCase: FC<GuessStatsHeaderCaseProps> = (props: GuessStatsHeaderCaseProps) => {
   const size = props.size ?? 1;
   const width = `${110 * size + 10 * (size - 1)}px`;
   return (

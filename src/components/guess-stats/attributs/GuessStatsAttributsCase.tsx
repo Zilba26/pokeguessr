@@ -1,18 +1,15 @@
-import { FC, PropsWithChildren } from 'react'
-import { Pokemon } from '../../../models/Pokemon'
-import './Pokeguess.css'
-import { Box, useColorModeValue } from '@chakra-ui/react'
-import { animated, useSpring } from 'react-spring'
-import { PokemonAttribut } from '../../../models/PokemonAttribut'
+import { useColorModeValue, Box } from "@chakra-ui/react";
+import { PropsWithChildren, FC } from "react";
+import { useSpring, animated } from "react-spring";
 
-interface CustomTdProps extends PropsWithChildren {
+interface GuessStatsAttributsCaseProps extends PropsWithChildren {
   bg?: string,
   index: number,
   arrowHigh?: boolean,
   isAnimated?: boolean
 }
 
-const CustomTd: FC<CustomTdProps> = (props) => {
+export const GuessStatsAttributsCase: FC<GuessStatsAttributsCaseProps> = (props) => {
 
   const boColor = useColorModeValue('black', 'white');
 
@@ -106,54 +103,4 @@ const CustomTd: FC<CustomTdProps> = (props) => {
       </Box>
     </animated.div>
   );
-}
-
-interface PokeguessProps {
-  pokemonGuess: Pokemon
-  pokemonToGuess: Pokemon
-  isAnimated?: boolean
-  attributs: PokemonAttribut<any>[]
-}
-
-export const Pokeguess: FC<PokeguessProps> = (props: PokeguessProps) => {
-
-  const getColor = (var1: any, var2: any) => {
-    if (var1 == var2) {
-      return "green"
-    } else {
-      return "red"
-    }
-  }
-
-  const pg = props.pokemonGuess;
-  const ptg = props.pokemonToGuess;
-
-
-  const getArrow = (nb: number, nbToGuess: number) => {
-    const diff = nb - nbToGuess;
-    if (diff > 0) {
-      return false
-    } else if (diff < 0) {
-      return true
-    } else {
-      return undefined;
-    }
-  }
-
-  return (
-    <Box display="flex" gap="10px" id={'pokeguess-' + props.pokemonGuess.pokedexId}>
-      <CustomTd index={0} isAnimated={props.isAnimated}><img src={pg.sprite} alt={pg.name} /></CustomTd>
-
-      {props.attributs.flatMap((attribut: PokemonAttribut<any>, index: number) => attribut.columns).map((col, colIndex) => {
-        const valGuess = col.value(pg);
-        const valToGuess = col.value(ptg);
-        return <CustomTd key={colIndex} index={colIndex + 1}
-          bg={getColor(valGuess, valToGuess)}
-          arrowHigh={col.withArrow ? getArrow(valGuess, valToGuess) : undefined}
-          isAnimated={props.isAnimated}>
-          {valGuess}
-        </CustomTd>
-      })}
-    </Box>
-  )
 }

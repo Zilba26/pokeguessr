@@ -1,9 +1,9 @@
-import { Pokemon, Generation, EvolutionStage } from "../models/Pokemon";
+import { Pokemon, Generation, EvolutionStage } from "../models/pokemon/Pokemon";
 import { PokemonAPI } from "./PokemonAPI";
 import { apiFetch } from "../../shared/api-client";
 import { ApiRoutes } from "../../shared/api-routes";
 import { PokemonDetailsDTO } from "../../shared/api-types";
-import { PokemonStats } from "../models/PokemonStats";
+import { PokemonStats } from "../models/pokemon/PokemonStats";
 
 export class SqliteAPI implements PokemonAPI {
 

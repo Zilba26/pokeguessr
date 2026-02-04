@@ -1,13 +1,13 @@
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, Box, Button, IconButton, Icon, ModalFooter, useToast, SystemStyleObject } from "@chakra-ui/react";
 import { ActionMeta, chakraComponents, OptionProps, Select } from "chakra-react-select";
 import { FC, useEffect, useState } from "react";
-import { PokemonAttribut } from "../../../models/PokemonAttribut";
+import { PokemonAttribut } from "../../../models/pokemon/PokemonAttribut";
 import { LocalStorageService } from "../../../service/LocalStorageService";
-import { Pokeguess } from "../pokeguess/Pokeguess";
-import { useDataPokemon } from "../../../context/DataContext";
-import { RandomTD } from "../RandomTd";
+import { GuessStatsHeaderCase } from "../GuessStatsHeaderCase";
 import { RxCross2 } from "react-icons/rx";
 import { FaCheck } from "react-icons/fa";
+import { useDataPokemon } from "../../../context/PokemonContext";
+import { GuessStats } from "../GuessStats";
 
 type Option = {
   label: string;
@@ -71,7 +71,7 @@ interface SettingsModalProps {
 
 export const SettingsModal: FC<SettingsModalProps> = (props: SettingsModalProps) => {
   const { isOpen, onClose } = props;
-  const pikachu = useDataPokemon().find((pokemon) => pokemon.pokedexId === 25)!;
+  const pikachu = useDataPokemon().find((pokemon) => pokemon.id === 25)!;
   const [attributsSetsNames, setAttributsSetsNames] = useState<Map<string, PokemonAttribut<any>[]>>(LocalStorageService.getRegisteredSetNames());
   const [attributs, setAttributs] = useState(LocalStorageService.getSetName());
   const [attributSetToLoad, setAttributSetToLoad] = useState<Option | null>(null);
@@ -197,23 +197,23 @@ export const SettingsModal: FC<SettingsModalProps> = (props: SettingsModalProps)
             </Button>
           </Box>
           <Box className='table-head' display="flex" gap="10px">
-            <RandomTD></RandomTD>
+            <GuessStatsHeaderCase></GuessStatsHeaderCase>
             {attributs.map((col, colIndex) => (
-              <RandomTD key={colIndex} size={col.columns.length}>
+              <GuessStatsHeaderCase key={colIndex} size={col.columns.length}>
                 <IconButton aria-label='Close' onClick={() => deleteAttribut(colIndex)} icon={
                   <Icon viewBox="0 0 24 24" boxSize={5}><path fill="currentColor" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" /></Icon>} />
-              </RandomTD>))}
+              </GuessStatsHeaderCase>))}
           </Box>
           <Box className='table-head' display="flex" gap="10px">
             <Box display={"flex"}>
-              <RandomTD>Pokemon</RandomTD>
+              <GuessStatsHeaderCase>Pokemon</GuessStatsHeaderCase>
             </Box>
             {attributs.flatMap((attribut: PokemonAttribut<any>, index: number) => attribut.columns).map((col, colIndex) => (
-              <RandomTD key={colIndex}>{col.label}</RandomTD>
+              <GuessStatsHeaderCase key={colIndex}>{col.label}</GuessStatsHeaderCase>
             ))}
           </Box>
           <Box className='table-body' display="flex">
-            <Pokeguess key={pikachu.pokedexId} pokemonGuess={pikachu} pokemonToGuess={pikachu} isAnimated={false} attributs={attributs} />
+            <GuessStats key={pikachu.id} entityGuess={pikachu} entityToGuess={pikachu} isAnimated={false} attributs={attributs} />
           </Box>
         </ModalBody>
         <ModalFooter display="flex" gap="10px">

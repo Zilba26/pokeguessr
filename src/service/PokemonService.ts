@@ -1,9 +1,10 @@
-import { Pokemon } from "../models/Pokemon";
+import { Pokemon } from "../models/pokemon/Pokemon";
 import { PokemonAPI } from "../repository/PokemonAPI";
 import { SqliteAPI } from "../repository/SqliteAPI";
 import { TyradexAPI } from "../repository/TyradexAPI";
+import { EntityService } from "./EntityService";
 
-export class PokemonService {
+export class PokemonService extends EntityService<Pokemon> {
   private readonly pokemonRepository: PokemonAPI = new SqliteAPI();
 
   public async getPokemonsByGenSelected(genSelected: boolean[]): Promise<Pokemon[]> {
@@ -14,12 +15,18 @@ export class PokemonService {
     return pokemonsByGenSelected;
   }
 
+  // TODO : to remove
   public getRandomPokemon(pokemons: Pokemon[]): Pokemon {
     const randomIndex: number = Math.floor(Math.random() * pokemons.length);
     return pokemons[randomIndex];
   }
 
+  // TODO : to remove
   public async getAllPokemons(): Promise<Pokemon[]> {
+    return this.pokemonRepository.getAllPokemon();
+  }
+
+  public async getAll(): Promise<Pokemon[]> {
     return this.pokemonRepository.getAllPokemon();
   }
 }

@@ -1,16 +1,17 @@
 import React, { FC } from 'react'
 import { Box, useColorModeValue } from '@chakra-ui/react'
-import { Pokemon } from '../../models/Pokemon';
+import { Pokemon } from '../../models/pokemon/Pokemon';
 import WordleSoluce from './WordleSoluce';
+import { Entity } from '../../models/Entity';
 
-interface BoardProps {
+interface BoardProps<T extends Entity> {
   words: string[];
-  pokemonToGuess: Pokemon;
+  entityToGuess: T;
   currentIndexEditingWord: number;
   error?: boolean;
 }
 
-const Board: FC<BoardProps> = (props: BoardProps) => {
+const Board: FC<BoardProps<Entity>> = (props: BoardProps<Entity>) => {
 
   const maxLetters = 12;
 
@@ -18,9 +19,9 @@ const Board: FC<BoardProps> = (props: BoardProps) => {
 
   const getLigneElements = (word: string, index: number) => {
     const elements = [];
-    const pokemonToGuessNormalized = props.pokemonToGuess.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
+    const entityToGuessNormalized = props.entityToGuess.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
     const wordNormalized = word.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
-    const wordleSoluce = WordleSoluce(wordNormalized, pokemonToGuessNormalized);
+    const wordleSoluce = WordleSoluce(wordNormalized, entityToGuessNormalized);
     for (let i = 0; i < maxLetters; i++) {
       const element = wordNormalized[i] ?? "";
       let color;
@@ -28,7 +29,7 @@ const Board: FC<BoardProps> = (props: BoardProps) => {
         color = "gray.500";
       } else if (i < wordleSoluce.length) {
         color = wordleSoluce[i];
-      } else if (pokemonToGuessNormalized[i] === undefined) {
+      } else if (entityToGuessNormalized[i] === undefined) {
         color = "red.500";
       } else {
         color = "gray.500";
