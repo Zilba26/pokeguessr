@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import './GuessStats.scss'
 import { Box, Button, Input, useColorModeValue, Image, Spinner, Center, useToast, useDisclosure } from '@chakra-ui/react';

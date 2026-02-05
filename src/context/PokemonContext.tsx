@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Pokemon } from '../models/pokemon/Pokemon';
 import { createEntityContext } from './EntityContext';
 import { EntityFilterController } from '../components/guess-stats/GuessStats';
