@@ -8,6 +8,7 @@ import { RxCross2 } from "react-icons/rx";
 import { FaCheck } from "react-icons/fa";
 import { useDataPokemon } from "../../../context/PokemonContext";
 import { GuessStats } from "../GuessStats";
+import { GuessStatsAttributs } from "../attributs/GuessStatsAttributs";
 
 type Option = {
   label: string;
@@ -213,7 +214,7 @@ export const SettingsModal: FC<SettingsModalProps> = (props: SettingsModalProps)
             ))}
           </Box>
           <Box className='table-body' display="flex">
-            <GuessStats key={pikachu.id} entityGuess={pikachu} entityToGuess={pikachu} isAnimated={false} attributs={attributs} />
+            <GuessStatsAttributs key={pikachu.id} entityGuess={pikachu} entityToGuess={pikachu} isAnimated={false} attributs={attributs} />
           </Box>
         </ModalBody>
         <ModalFooter display="flex" gap="10px">
