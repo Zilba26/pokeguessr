@@ -28,7 +28,7 @@ export function GuessStats<T extends Entity>({ useData, service, getSetName, fil
   // Entités après application des filtres
   const [entitiesData, setEntitiesData] = useState<T[]>(allEntitiesData.filter((entity: T) => filterController?.filter(entity) ?? true));
   // Entité à deviner
-  const [entityToFind, setEntityToFind] = useState<T>(service.getRandom(allEntitiesData));
+  const [entityToFind, setEntityToFind] = useState<T>(service.getRandom(entitiesData));
 
   // Entités déjà proposées
   const [entityGuessTries, setEntityGuessTries] = useState<T[]>([]);
@@ -44,12 +44,16 @@ export function GuessStats<T extends Entity>({ useData, service, getSetName, fil
 
   const [attributs, setAttributs] = useState(getSetName());
 
+  const updateEntitiesData = () => {
+    setEntitiesData(allEntitiesData.filter((entity: T) => filterController?.filter(entity) ?? true));
+  }
+
   useEffect(() => {
     if (allEntitiesData.length > 0) {
-      const randomEntity = service.getRandom(allEntitiesData);
+      updateEntitiesData();
+      const randomEntity = service.getRandom(entitiesData);
 
       setEntityToFind(randomEntity);
-      setEntitiesData(allEntitiesData);
     }
   }, [allEntitiesData]);
 
@@ -116,9 +120,8 @@ export function GuessStats<T extends Entity>({ useData, service, getSetName, fil
   }
 
   const regenerateEntity = async () => {
-    const entities = allEntitiesData.filter((entity: T) => filterController?.filter(entity) ?? true);
-    const entityToGuess = service.getRandom(entities);
-    setEntitiesData(entities);
+    updateEntitiesData();
+    const entityToGuess = service.getRandom(entitiesData);
     setEntityToFind(entityToGuess);
     setEntityGuessTries([]);
     setWin(false);
