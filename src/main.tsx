@@ -9,17 +9,16 @@ import { ChakraProvider, ColorModeScript } from '@chakra-ui/react'
 import theme from './theme'
 import { LocalStorageService } from './service/LocalStorageService'
 import { PokemonService } from './service/PokemonService'
-import { PokemonGenerationFilter, PokemonProvider, useDataPokemon } from './context/PokemonContext'
-import { Attribut } from './models/Attribut'
+import { PokemonProvider, useDataPokemon } from './context/PokemonContext'
 import { Entity } from './models/Entity'
 import { EntityService } from './service/EntityService'
-import { EntityFilterController, GuessStats } from './components/guess-stats/GuessStats'
+import { GuessStats } from './components/guess-stats/GuessStats'
 import { Home2 } from './components/Home2'
 import { Wordle } from './components/wordle/Wordle'
 
-const createRandomRoute = <T extends Entity>(path: string, useData: () => T[], service: EntityService<T>, getSetName: () => Attribut<any, T>[], filter: EntityFilterController<T>) => ([{
+const createRandomRoute = <T extends Entity>(path: string, useData: () => T[], service: EntityService<T>) => ([{
   path: path + "/guess-stats",
-  element: <GuessStats<T> useData={useData} service={service} getSetName={getSetName} filterController={filter} />,
+  element: <GuessStats<T> useData={useData} service={service} />,
 }, {
   path: path + "/wordle",
   element: <Wordle<T> useData={useData} service={service} />,
@@ -34,7 +33,7 @@ const router = createBrowserRouter([
         path: "/",
         element: <Home2 />,
       },
-      ...createRandomRoute('/pokemon', useDataPokemon, new PokemonService(), () => LocalStorageService.getSetName(), new PokemonGenerationFilter()),
+      ...createRandomRoute('/pokemon', useDataPokemon, new PokemonService()),
     ],
     errorElement: <Redirect />,
   }

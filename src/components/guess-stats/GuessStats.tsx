@@ -9,24 +9,19 @@ import { Entity } from '../../models/Entity';
 import { EntityService } from '../../service/EntityService';
 import { GuessStatsAttributs } from './attributs/GuessStatsAttributs';
 
-export interface EntityFilterController<T extends Entity> {
-  filter(entity: T): boolean;
-  render?: () => React.ReactNode;
-}
+
 
 interface GuessStatsProps<T extends Entity> {
   useData: () => T[];
   service: EntityService<T>;
-  getSetName: () => Attribut<any, T>[];
-  filterController?: EntityFilterController<T>;
 }
 
-export function GuessStats<T extends Entity>({ useData, service, getSetName, filterController }: GuessStatsProps<T>) {
+export function GuessStats<T extends Entity>({ useData, service }: GuessStatsProps<T>) {
 
   // Toutes les entités disponibles (avant filtre(s))
   const allEntitiesData: T[] = useData();
   // Entités après application des filtres
-  const [entitiesData, setEntitiesData] = useState<T[]>(allEntitiesData.filter((entity: T) => filterController?.filter(entity) ?? true));
+  const [entitiesData, setEntitiesData] = useState<T[]>(allEntitiesData.filter((entity: T) => service.getFilterController()?.filter(entity) ?? true));
   // Entité à deviner
   const [entityToFind, setEntityToFind] = useState<T>(service.getRandom(entitiesData));
 
@@ -42,10 +37,10 @@ export function GuessStats<T extends Entity>({ useData, service, getSetName, fil
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const [attributs, setAttributs] = useState(getSetName());
+  const [attributs, setAttributs] = useState(service.getSetName());
 
   const updateEntitiesData = () => {
-    setEntitiesData(allEntitiesData.filter((entity: T) => filterController?.filter(entity) ?? true));
+    setEntitiesData(allEntitiesData.filter((entity: T) => service.getFilterController()?.filter(entity) ?? true));
   }
 
   useEffect(() => {
@@ -125,7 +120,7 @@ export function GuessStats<T extends Entity>({ useData, service, getSetName, fil
     setEntityToFind(entityToGuess);
     setEntityGuessTries([]);
     setWin(false);
-    setAttributs(getSetName());
+    setAttributs(service.getSetName());
     toast({
       title: "Le pokémon a été regénéré !",
       status: "info",
@@ -152,7 +147,7 @@ export function GuessStats<T extends Entity>({ useData, service, getSetName, fil
         <div className="after"></div>
       </div>
       <div className='random'>
-        {filterController?.render?.()}
+        {service.getFilterController()?.render?.()}
         <Box h="20px"></Box>
         <Box display="flex" gap="10px">
           <Button onClick={regenerateEntity}>Regénérer</Button>
@@ -188,7 +183,7 @@ export function GuessStats<T extends Entity>({ useData, service, getSetName, fil
 
         <Box>
           <Box className='table-head' display="flex" gap="10px">
-            <GuessStatsHeaderCase>Entity</GuessStatsHeaderCase>
+            <GuessStatsHeaderCase>{service.getEntityName()}</GuessStatsHeaderCase>
             {attributs.flatMap((attribut: Attribut<any, T>, index: number) => attribut.columns).map((col, colIndex) => (
               <GuessStatsHeaderCase key={`${colIndex}`}>{col.label}</GuessStatsHeaderCase>
             ))}
