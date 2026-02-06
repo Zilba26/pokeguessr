@@ -37,7 +37,7 @@ export function GuessStats<T extends Entity>({ useData, service }: GuessStatsPro
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const [attributs, setAttributs] = useState(service.getSetName());
+  const [attributs, setAttributs] = useState(service.getCurrentSet());
 
   const updateEntitiesData = () => {
     setEntitiesData(allEntitiesData.filter((entity: T) => service.getFilterController()?.filter(entity) ?? true));
@@ -120,7 +120,7 @@ export function GuessStats<T extends Entity>({ useData, service }: GuessStatsPro
     setEntityToFind(entityToGuess);
     setEntityGuessTries([]);
     setWin(false);
-    setAttributs(service.getSetName());
+    setAttributs(service.getCurrentSet());
     toast({
       title: "Le pokémon a été regénéré !",
       status: "info",
@@ -183,7 +183,7 @@ export function GuessStats<T extends Entity>({ useData, service }: GuessStatsPro
 
         <Box>
           <Box className='table-head' display="flex" gap="10px">
-            <GuessStatsHeaderCase>{service.getEntityName()}</GuessStatsHeaderCase>
+            <GuessStatsHeaderCase>{service.getSpriteColumnName()}</GuessStatsHeaderCase>
             {attributs.flatMap((attribut: Attribut<any, T>, index: number) => attribut.columns).map((col, colIndex) => (
               <GuessStatsHeaderCase key={`${colIndex}`}>{col.label}</GuessStatsHeaderCase>
             ))}
@@ -195,7 +195,7 @@ export function GuessStats<T extends Entity>({ useData, service }: GuessStatsPro
           </Box>
         </Box>
       </div>
-      <SettingsModal isOpen={isOpen} onClose={onClose} />
+      <SettingsModal service={service} isOpen={isOpen} onClose={onClose} />
     </>
   )
 }

@@ -1,92 +1,37 @@
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, Box, Button, IconButton, Icon, ModalFooter, useToast, SystemStyleObject } from "@chakra-ui/react";
-import { ActionMeta, chakraComponents, OptionProps, Select } from "chakra-react-select";
-import { FC, useEffect, useState } from "react";
-import { PokemonAttribut } from "../../../models/pokemon/PokemonAttribut";
-import { LocalStorageService } from "../../../service/LocalStorageService";
+import { ActionMeta, Select } from "chakra-react-select";
+import { useState } from "react";
 import { GuessStatsHeaderCase } from "../GuessStatsHeaderCase";
-import { RxCross2 } from "react-icons/rx";
-import { FaCheck } from "react-icons/fa";
-import { useDataPokemon } from "../../../context/PokemonContext";
-import { GuessStats } from "../GuessStats";
 import { GuessStatsAttributs } from "../attributs/GuessStatsAttributs";
+import { Entity } from "../../../models/Entity";
+import { Option } from "./Option";
+import { CustomOption } from "./CustomOptionSelect";
+import { Attribut } from "../../../models/Attribut";
+import { EntityService } from "../../../service/EntityService";
 
-type Option = {
-  label: string;
-  value: string;
-}
-
-const CustomOption = (props: OptionProps<Option>) => {
-  const { data, innerProps, selectProps, isFocused } = props;
-
-  const [confirming, setConfirming] = useState(false);
-
-  useEffect(() => {
-    if (!selectProps.menuIsOpen) {
-      setConfirming(false);
-    }
-  }, [selectProps.menuIsOpen]);
-
-  const handleConfirm = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation();
-    selectProps.onChange!(data, {
-      action: 'remove-value',
-      removedValue: data,
-    });
-    setConfirming(false);
-  };
-
-  const handleStartConfirm = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation();
-    setConfirming(true);
-  };
-
-  return (
-    <chakraComponents.Option {...props}>
-      <Box display="flex" alignItems="center" width="100%" gap={2}>
-        <Box flex="1" whiteSpace="nowrap">
-          {data.label}
-        </Box>
-
-        {confirming ? (
-          <>
-            <IconButton aria-label="Confirm delete" size="sm" bgColor="rgba(255, 0, 0, 0.8)" onClick={handleConfirm} icon={<FaCheck size="20"/>}/>
-          </>
-        ) : (
-          <IconButton aria-label="Delete" size="sm" onClick={handleStartConfirm}
-            icon={
-              <RxCross2 size="32" />
-            }
-          />
-        )}
-
-      </Box>
-    </chakraComponents.Option>
-  );
-};
-
-
-interface SettingsModalProps {
+interface SettingsModalProps<T extends Entity> {
+  service: EntityService<T>;
   isOpen: boolean;
   onClose: () => void;
 }
 
-export const SettingsModal: FC<SettingsModalProps> = (props: SettingsModalProps) => {
-  const { isOpen, onClose } = props;
-  const pikachu = useDataPokemon().find((pokemon) => pokemon.id === 25)!;
-  const [attributsSetsNames, setAttributsSetsNames] = useState<Map<string, PokemonAttribut<any>[]>>(LocalStorageService.getRegisteredSetNames());
-  const [attributs, setAttributs] = useState(LocalStorageService.getSetName());
+export const SettingsModal = <T extends Entity>(props: SettingsModalProps<T>) => {
+  const { isOpen, onClose, service } = props;
+  const entity = service.getBaseEntity()!;
+  const [attributsSetsNames, setAttributsSetsNames] = useState<Map<string, Attribut<any, T>[]>>(service.getRegisteredSets());
+  const [attributs, setAttributs] = useState(service.getCurrentSet());
   const [attributSetToLoad, setAttributSetToLoad] = useState<Option | null>(null);
   const [attributToAdd, setAttributToAdd] = useState<Option | null>(null);
   const toast = useToast();
 
   const loadSetAttribut = (setName: string) => {
-    const setAttributsToLoad = LocalStorageService.getRegisteredSetNames().get(setName);
+    const setAttributsToLoad = service.getRegisteredSets().get(setName);
     if (!setAttributsToLoad) return;
     setAttributs(setAttributsToLoad);
   }
 
   const addAttribut = (attributId: string) => {
-    const attribut = PokemonAttribut.fromId(attributId);
+    const attribut = service.getAttributFromId(attributId);
     if (!attribut) return;
     setAttributs([...attributs, attribut]);
     setAttributToAdd(null);
@@ -107,8 +52,8 @@ export const SettingsModal: FC<SettingsModalProps> = (props: SettingsModalProps)
       });
       return;
     }
-    if (LocalStorageService.saveSetNameWithName(setName, attributs)) {
-      setAttributsSetsNames(LocalStorageService.getRegisteredSetNames());
+    if (service.saveSetWithName(setName, attributs)) {
+      setAttributsSetsNames(service.getRegisteredSets());
       toast({
         title: `Le set d'attributs "${setName}" a été sauvegardé !`,
         status: "success",
@@ -122,15 +67,15 @@ export const SettingsModal: FC<SettingsModalProps> = (props: SettingsModalProps)
   }
 
   const deleteSet = (setName: string) => {
-    LocalStorageService.deleteSetName(setName);
-    setAttributsSetsNames(LocalStorageService.getRegisteredSetNames());
+    service.deleteRegisteredSet(setName);
+    setAttributsSetsNames(service.getRegisteredSets());
     if (attributSetToLoad?.value === setName) {
       setAttributSetToLoad(null);
     }
   }
 
   const save = () => {
-    LocalStorageService.saveSetName(attributs);
+    service.saveCurrentSet(attributs);
     close();
     toast({
       title: "Les attributs ont été sauvegardés et seront chargés pour le prochain pokemon !",
@@ -140,7 +85,7 @@ export const SettingsModal: FC<SettingsModalProps> = (props: SettingsModalProps)
 
   const close = () => {
     onClose();
-    setAttributs(LocalStorageService.getSetName());
+    setAttributs(service.getCurrentSet());
   }
 
   const menuStyle = {
@@ -187,7 +132,7 @@ export const SettingsModal: FC<SettingsModalProps> = (props: SettingsModalProps)
             <Button onClick={() => loadSetAttribut(attributSetToLoad?.value ?? "")}>Charger</Button>
 
             <Box display="flex" justifyContent="center">Paramètre à ajouter&nbsp;:</Box>
-            <Select<Option> value={attributToAdd} onChange={setAttributToAdd} options={PokemonAttribut.values().filter((attribut) => !attributs.includes(attribut)).map((attribut, index) => (
+            <Select<Option> value={attributToAdd} onChange={setAttributToAdd} options={service.getAllAttributs().filter((attribut) => !attributs.includes(attribut)).map((attribut, index) => (
               {
                 label: attribut.id,
                 value: attribut.id
@@ -209,12 +154,12 @@ export const SettingsModal: FC<SettingsModalProps> = (props: SettingsModalProps)
             <Box display={"flex"}>
               <GuessStatsHeaderCase>Pokemon</GuessStatsHeaderCase>
             </Box>
-            {attributs.flatMap((attribut: PokemonAttribut<any>, index: number) => attribut.columns).map((col, colIndex) => (
+            {attributs.flatMap((attribut: Attribut<any, T>, index: number) => attribut.columns).map((col, colIndex) => (
               <GuessStatsHeaderCase key={colIndex}>{col.label}</GuessStatsHeaderCase>
             ))}
           </Box>
           <Box className='table-body' display="flex">
-            <GuessStatsAttributs key={pikachu.id} entityGuess={pikachu} entityToGuess={pikachu} isAnimated={false} attributs={attributs} />
+            <GuessStatsAttributs key={entity.id} entityGuess={entity} entityToGuess={entity} isAnimated={false} attributs={attributs} />
           </Box>
         </ModalBody>
         <ModalFooter display="flex" gap="10px">

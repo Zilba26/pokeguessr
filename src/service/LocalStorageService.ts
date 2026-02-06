@@ -1,67 +1,78 @@
-import { PokemonAttribut } from "../models/pokemon/PokemonAttribut";
+import { Attribut } from "../models/Attribut";
+import { Entity } from "../models/Entity";
 
-export class LocalStorageService {
-    private static readonly POKEGUESS_GEN_SELECTED_KEY = "pokeguess_gen_selected";
-    private static readonly POKEGUESS_SETNAME_KEY = "pokeguess_set_name";
-    private static readonly POKEGUESS_SETSNAMES_REGISTERED_KEY = "pokeguess_setsnames_registered";
+export abstract class LocalStorageService<T extends Entity> {
+    private entityName: string;
 
-    public static init(): void {
-        if (!localStorage.getItem(this.POKEGUESS_SETSNAMES_REGISTERED_KEY)) {
-            const setNames: Map<string, PokemonAttribut<any>[]> = new Map();
-            setNames.set("Basique", PokemonAttribut.baseValue());
-            setNames.set("Statistiques", [
-                PokemonAttribut.HP,
-                PokemonAttribut.ATTACK,
-                PokemonAttribut.DEFENSE,
-                PokemonAttribut.SPECIAL_ATTACK,
-                PokemonAttribut.SPECIAL_DEFENSE,
-                PokemonAttribut.SPEED
-            ]);
-            this.saveRegisteredSetNames(setNames);
+    constructor(entityName: string) {
+        this.entityName = entityName;
+    }
+
+    private getCurrentSetKey(): string {
+        return `${this.entityName}_current_set`;
+    }
+
+    private getSetsRegisteredKey(): string {
+        return `${this.entityName}_sets_registered`;
+    }
+
+    abstract getAllAttributs(): Attribut<any, T>[];
+    abstract getBaseAttributs(): Attribut<any, T>[];
+    abstract getAttributFromId(id: any): Attribut<any, T> | undefined;
+    protected getAdditionalPreRegisteredSets(): Map<string, Attribut<any, T>[]> {
+        return new Map();
+    }
+
+    // Current set
+    public getCurrentSet(): Attribut<any, T>[] {
+        const data = localStorage.getItem(this.getCurrentSetKey());
+        return data ? JSON.parse(data).map((id: any) => this.getAttributFromId(id)!) : this.getBaseAttributs();
+    }
+
+    public saveCurrentSet(setName: Attribut<any, T>[]): void {
+        localStorage.setItem(this.getCurrentSetKey(), JSON.stringify(setName.map(attribut => attribut.id)));
+    }
+
+    // Registered sets
+    public getRegisteredSets(): Map<string, Attribut<any, T>[]> {
+        const data = localStorage.getItem(this.getSetsRegisteredKey());
+        const result: Map<string, Attribut<any, T>[]> = new Map();
+        if (data) {
+            const parsedData: Map<string, string[]> = new Map(Object.entries(JSON.parse(data)));
+            parsedData.forEach((ids, name) => {
+                result.set(name, ids.map(id => this.getAttributFromId(id)!));
+            });
+        } else {
+            result.set("Basique", this.getBaseAttributs());
+            this.getAdditionalPreRegisteredSets().forEach((attributs, name) => {
+                result.set(name, attributs);
+            });
+            this.saveRegisteredSets(result);
         }
+        return result;
     }
 
-    public static saveSetName(setName: PokemonAttribut<any>[]): void {
-        localStorage.setItem(this.POKEGUESS_SETNAME_KEY, JSON.stringify(setName.map(attribut => attribut.id)));
-    }
-    public static getSetName(): PokemonAttribut<any>[] {
-        const data = localStorage.getItem(this.POKEGUESS_SETNAME_KEY);
-        return data ? JSON.parse(data).map((id: any) => PokemonAttribut.fromId(id)) : PokemonAttribut.baseValue();
-    }
-
-    public static saveRegisteredSetNames(setNames: Map<string, PokemonAttribut<any>[]>): void {
+    public saveRegisteredSets(setNames: Map<string, Attribut<any, T>[]>): void {
         const setNamesToSave: Map<string, string[]> = new Map();
         setNames.forEach((attributs, name) => {
             setNamesToSave.set(name, attributs.map(attribut => attribut.id));
         });
-        localStorage.setItem(this.POKEGUESS_SETSNAMES_REGISTERED_KEY, JSON.stringify(Object.fromEntries(setNamesToSave)));
+        localStorage.setItem(this.getSetsRegisteredKey(), JSON.stringify(Object.fromEntries(setNamesToSave)));
     }
 
-    public static saveSetNameWithName(setName: string, attributs: PokemonAttribut<any>[]): boolean {
-        const registeredSetNames = this.getRegisteredSetNames();
-        if (registeredSetNames.has(setName)) {
+    public saveSetWithName(setName: string, attributs: Attribut<any, T>[]): boolean {
+        const registeredSets = this.getRegisteredSets();
+        if (registeredSets.has(setName)) {
             return false;
         }
-        registeredSetNames.set(setName, attributs);
-        this.saveRegisteredSetNames(registeredSetNames);
+        registeredSets.set(setName, attributs);
+        this.saveRegisteredSets(registeredSets);
         return true;
     }
 
-    public static deleteSetName(setName: string): void {
-        const registeredSetNames = this.getRegisteredSetNames();
-        registeredSetNames.delete(setName);
-        this.saveRegisteredSetNames(registeredSetNames);
-    }
-
-    public static getRegisteredSetNames(): Map<string, PokemonAttribut<any>[]> {
-        const data = localStorage.getItem(this.POKEGUESS_SETSNAMES_REGISTERED_KEY);
-        const result: Map<string, PokemonAttribut<any>[]> = new Map();
-        if (data) {
-            const parsedData: Map<string, string[]> = new Map(Object.entries(JSON.parse(data)));
-            parsedData.forEach((ids, name) => {
-                result.set(name, ids.map(id => PokemonAttribut.fromId(id)!));
-            });
-        }
-        return result;
+    public deleteRegisteredSet(setName: string): void {
+        const registeredSets = this.getRegisteredSets();
+        registeredSets.delete(setName);
+        this.saveRegisteredSets(registeredSets);
     }
 }

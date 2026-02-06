@@ -43,7 +43,7 @@ export function GuessStatsAttributs<T extends Entity>({ entityGuess, entityToGue
           bg={getColor(valGuess, valToGuess)}
           arrowHigh={col.withArrow ? getArrow(valGuess, valToGuess) : undefined}
           isAnimated={isAnimated}>
-          {valGuess}
+          {valGuess instanceof Date ? valGuess.toLocaleDateString() : valGuess}
         </GuessStatsAttributsCase>
       })}
     </Box>
