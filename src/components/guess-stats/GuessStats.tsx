@@ -85,7 +85,8 @@ export function GuessStats<T extends Entity>({ useData, service }: GuessStatsPro
   const onGuessInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
     let list;
-    if (value.length > 2) {
+    const minLengthToSearch = entitiesData.length > 500 ? 3 : 2;
+    if (value.length >= minLengthToSearch) {
       list = entitiesData.filter((entity: T) => {
         return entity.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().startsWith(value) && !entityGuessTries.includes(entity);
       });
@@ -156,7 +157,7 @@ export function GuessStats<T extends Entity>({ useData, service }: GuessStatsPro
         <Box h="30px"></Box>
         <div className='guess'>
           <div className='dropdown'>
-            <Input id='guess-input' onChange={onGuessInputChange} onKeyDown={handleKeyDown} />
+            <Input id='guess-input' onChange={onGuessInputChange} onKeyDown={handleKeyDown} disabled={win} />
             <Box id='poke-list' borderColor={border} border="1px" bg={bg} display={dropdownEntities == null ? "none" : "block"} zIndex="100">
               {dropdownEntities?.length != 0 ? dropdownEntities?.map((entity: T) => {
                 return <Box className='poke-list-item' key={entity.id} bg={entity == selectedEntity ? hoverBg : bg}
