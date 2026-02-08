@@ -18,7 +18,7 @@
     "@vercel/node": "^5.5.27",
     "better-sqlite3": "^12.6.2",
     "chakra-react-select": "^5.1.0",
-    "genshin-db": "^5.2.8",
+    "genshin-db": "latest",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "react-icons": "^5.5.0",
