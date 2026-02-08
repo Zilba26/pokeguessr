@@ -6,10 +6,10 @@ export class GenshinImpactCharacter extends Entity {
     gender: string;
     nation: string;
     rarity: number;
-    releaseDate: Date;
-    birthday: Date;
+    releaseDate: string;
+    birthday: string;
 
-    constructor(id: number, name: string, sprite: string, element: string, weaponType: string, gender: string, nation: string, rarity: number, releaseDate: Date, birthday: Date) {
+    constructor(id: number, name: string, sprite: string, element: string, weaponType: string, gender: string, nation: string, rarity: number, releaseDate: string, birthday: string) {
         super(id, name, sprite);
         this.element = element;
         this.weaponType = weaponType;
