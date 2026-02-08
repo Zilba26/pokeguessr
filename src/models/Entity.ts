@@ -1,3 +1,5 @@
+import { normalizeString } from "../utils/normalize";
+
 export abstract class Entity {
 
     id: number;
@@ -15,8 +17,6 @@ export abstract class Entity {
     }
 
     public equalsName(name: string): boolean {
-        const name1 = this.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
-        const name2 = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
-        return name1 === name2;
+        return normalizeString(this.name) === normalizeString(name);
     }
 }

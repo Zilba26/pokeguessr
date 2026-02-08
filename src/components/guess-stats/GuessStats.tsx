@@ -8,6 +8,7 @@ import { Attribut } from '../../models/Attribut';
 import { Entity } from '../../models/Entity';
 import { EntityService } from '../../service/EntityService';
 import { GuessStatsAttributs } from './attributs/GuessStatsAttributs';
+import { normalizeString } from '../../utils/normalize';
 
 
 
@@ -56,9 +57,9 @@ export function GuessStats<T extends Entity>({ useData, service }: GuessStatsPro
     if (entityInput == undefined) {
       const input = document.querySelector<HTMLInputElement>('input');
       if (input) {
-        const entityName = input.value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
+        const entityName = normalizeString(input.value);
         const entity = entitiesData.find((entity: T) => {
-          return entity.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase() === entityName;
+          return normalizeString(entity.name) === entityName;
         });
         if (entity) {
           entityInput = entity;
@@ -72,7 +73,7 @@ export function GuessStats<T extends Entity>({ useData, service }: GuessStatsPro
       input!.value = '';
       input!.focus();
     }
-    if (entityInput && entityInput == entityToFind) {
+    if (entityInput && entityInput.equals(entityToFind)) {
       setWin(true);
       const pyro = document.getElementById('pyro');
       pyro?.classList.add('pyro');
@@ -83,12 +84,12 @@ export function GuessStats<T extends Entity>({ useData, service }: GuessStatsPro
   }
 
   const onGuessInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
+    const value = normalizeString(event.target.value);
     let list;
     const minLengthToSearch = entitiesData.length > 500 ? 3 : 2;
     if (value.length >= minLengthToSearch) {
       list = entitiesData.filter((entity: T) => {
-        return entity.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().startsWith(value) && !entityGuessTries.includes(entity);
+        return normalizeString(entity.name).split(" ").some(part => part.startsWith(value)) && !entityGuessTries.includes(entity);
       });
     } else {
       list = null;

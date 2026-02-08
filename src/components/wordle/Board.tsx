@@ -3,6 +3,7 @@ import { Box, useColorModeValue } from '@chakra-ui/react'
 import { Pokemon } from '../../models/pokemon/Pokemon';
 import WordleSoluce from './WordleSoluce';
 import { Entity } from '../../models/Entity';
+import { normalizeString } from '../../utils/normalize';
 
 interface BoardProps<T extends Entity> {
   words: string[];
@@ -19,8 +20,8 @@ const Board: FC<BoardProps<Entity>> = (props: BoardProps<Entity>) => {
 
   const getLigneElements = (word: string, index: number) => {
     const elements = [];
-    const entityToGuessNormalized = props.entityToGuess.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
-    const wordNormalized = word.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
+    const entityToGuessNormalized = normalizeString(props.entityToGuess.name);
+    const wordNormalized = normalizeString(word);
     const wordleSoluce = WordleSoluce(wordNormalized, entityToGuessNormalized);
     for (let i = 0; i < maxLetters; i++) {
       const element = wordNormalized[i] ?? "";
