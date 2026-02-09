@@ -16,6 +16,7 @@ import { Home2 } from './components/Home2'
 import { Wordle } from './components/wordle/Wordle'
 import { GenshinImpactService } from './service/GenshinImpactService'
 import { GenshinImpactProvider, useDataGenshinImpact } from './context/GenshinImpactContext'
+import './i18n'
 
 const createRandomRoute = <T extends Entity>(path: string, useData: () => T[], service: EntityService<T>) => ([{
   path: path + "/guess-stats",
