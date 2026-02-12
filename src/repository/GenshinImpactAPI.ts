@@ -21,7 +21,7 @@ export class GenshinImpactAPI {
             json.region,
             json.rarity,
             json.version,
-            json.birthday,
+            json.birthdaymmdd ? new Date(new Date().getFullYear() + '-' + json.birthdaymmdd) : new Date(0),
         );
     }
     

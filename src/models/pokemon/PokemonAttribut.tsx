@@ -2,8 +2,9 @@ import { Pokemon } from "./Pokemon";
 import { Type } from "./Type";
 import { HelpTooltip } from "../../components/utils/HelpTooltip";
 import { Attribut, AttributColumn } from "../Attribut";
+import { Stringabble } from "../../components/utils/Stringabble";
 
-export class PokemonAttribut<T> extends Attribut<T, Pokemon> {
+export class PokemonAttribut<T extends Stringabble> extends Attribut<T, Pokemon> {
 
     static readonly TYPE = new PokemonAttribut<Type[]>(
         "Types",

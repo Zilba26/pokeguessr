@@ -78,7 +78,7 @@ export const SettingsModal = <T extends Entity>(props: SettingsModalProps<T>) =>
     service.saveCurrentSet(attributs);
     close();
     toast({
-      title: "Les attributs ont été sauvegardés et seront chargés pour le prochain pokemon !",
+      title: `Les attributs ont été sauvegardés et seront chargés pour le prochain ${service.getSpriteColumnName()} !`,
       status: "success",
     });
   }
@@ -152,7 +152,7 @@ export const SettingsModal = <T extends Entity>(props: SettingsModalProps<T>) =>
           </Box>
           <Box className='table-head' display="flex" gap="10px">
             <Box display={"flex"}>
-              <GuessStatsHeaderCase>Pokemon</GuessStatsHeaderCase>
+              <GuessStatsHeaderCase>{service.getSpriteColumnName()}</GuessStatsHeaderCase>
             </Box>
             {attributs.flatMap((attribut: Attribut<any, T>, index: number) => attribut.columns).map((col, colIndex) => (
               <GuessStatsHeaderCase key={colIndex}>{col.label}</GuessStatsHeaderCase>

@@ -24,7 +24,6 @@ export const createEntityContext = <T extends Entity>() => {
       const fetchData = async () => {
         const entities = await service.getAll();
         setData(entities);
-        console.log('Data fetched:', entities.length, 'entities');
       };
       if (data.length === 0) fetchData();
     }, [data, service]);

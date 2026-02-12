@@ -1,8 +1,8 @@
-import { HelpTooltip } from "../../components/utils/HelpTooltip";
+import { DateStringabble, Stringabble } from "../../components/utils/Stringabble";
 import { Attribut, AttributColumn } from "../Attribut";
 import { GenshinImpactCharacter } from "./GenshinImpactCharacter";
 
-export class GenshinImpactAttribut<T> extends Attribut<T, GenshinImpactCharacter> {
+export class GenshinImpactAttribut<T extends Stringabble> extends Attribut<T, GenshinImpactCharacter> {
 
     static readonly ELEMENT = new GenshinImpactAttribut<string>(
         "Élément",
@@ -20,40 +20,40 @@ export class GenshinImpactAttribut<T> extends Attribut<T, GenshinImpactCharacter
         "Nation",
         [{ label: "Nation", value: (character: GenshinImpactCharacter) => character.nation }]
     );
-    static readonly RARITY = new GenshinImpactAttribut<string>(
+    static readonly RARITY = new GenshinImpactAttribut<number>(
         "Rareté",
         [{ label: "Rareté", value: (character: GenshinImpactCharacter) => character.rarity }]
     );
-    static readonly RELEASE_DATE = new GenshinImpactAttribut<Date>(
-        "Date de sortie",
-        [{ label: "Date de sortie", value: (character: GenshinImpactCharacter) => character.releaseDate, withArrow: true }]
+    static readonly RELEASE_VERSION = new GenshinImpactAttribut<string>(
+        "Version de sortie",
+        [{ label: "Version de sortie", value: (character: GenshinImpactCharacter) => character.releaseVersion, withArrow: true }]
     );
-    static readonly BIRTHDAY_DATE = new GenshinImpactAttribut<Date>(
+    static readonly BIRTHDAY_DATE = new GenshinImpactAttribut<DateStringabble>(
         "Date d'anniversaire",
-        [{ label: "Anniversaire", value: (character: GenshinImpactCharacter) => character.birthday, withArrow: true }]
+        [{ label: "Anniversaire", value: (character: GenshinImpactCharacter) => DateStringabble.withDayMonth(character.birthday), withArrow: true }]
     );
 
     private constructor(
         public readonly id: string,
-        public readonly columns: AttributColumn<any, GenshinImpactCharacter>[]
+        public readonly columns: AttributColumn<T, GenshinImpactCharacter>[]
     ) {super(id, columns);}
 
-    public static fromId(id: string): GenshinImpactAttribut<any> | undefined {
+    public static fromId(id: string): GenshinImpactAttribut<Stringabble> | undefined {
         return this.values().find((attribut) => attribut.id === id);
     }
 
-    public static baseValue(): GenshinImpactAttribut<any>[] {
+    public static baseValue(): GenshinImpactAttribut<Stringabble>[] {
         return this.values();
     }
 
-    public static values(): GenshinImpactAttribut<any>[] {
+    public static values(): GenshinImpactAttribut<Stringabble>[] {
         return [
             GenshinImpactAttribut.ELEMENT,
             GenshinImpactAttribut.WEAPON_TYPE,
             GenshinImpactAttribut.GENDER,
             GenshinImpactAttribut.NATION,
             GenshinImpactAttribut.RARITY,
-            GenshinImpactAttribut.RELEASE_DATE,
+            GenshinImpactAttribut.RELEASE_VERSION,
             GenshinImpactAttribut.BIRTHDAY_DATE
         ];
     }

@@ -16,6 +16,8 @@ import { Home2 } from './components/Home2'
 import { Wordle } from './components/wordle/Wordle'
 import { GenshinImpactService } from './service/GenshinImpactService'
 import { GenshinImpactProvider, useDataGenshinImpact } from './context/GenshinImpactContext'
+import { LolProvider, useDataLol } from './context/LolContext'
+import { LolService } from './service/LolService'
 
 const createRandomRoute = <T extends Entity>(path: string, useData: () => T[], service: EntityService<T>) => ([{
   path: path + "/guess-stats",
@@ -36,6 +38,7 @@ const router = createBrowserRouter([
       },
       ...createRandomRoute('/pokemon', useDataPokemon, new PokemonService()),
       ...createRandomRoute('/genshin-impact', useDataGenshinImpact, new GenshinImpactService()),
+      ...createRandomRoute('/lol', useDataLol, new LolService()),
     ],
     errorElement: <Redirect />,
   }
@@ -47,7 +50,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <ColorModeScript initialColorMode={theme.config.initialColorMode} />
       <PokemonProvider service={new PokemonService()}>
         <GenshinImpactProvider service={new GenshinImpactService()}>
-          <RouterProvider router={router} />
+          <LolProvider service={new LolService()}>
+            <RouterProvider router={router} />
+          </LolProvider>
         </GenshinImpactProvider>
       </PokemonProvider>
     </ChakraProvider>

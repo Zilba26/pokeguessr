@@ -7,6 +7,7 @@ interface GuessStatsAttributsCaseProps extends PropsWithChildren {
   index: number,
   arrowHigh?: boolean,
   isAnimated?: boolean
+  delay?: number
 }
 
 export const GuessStatsAttributsCase: FC<GuessStatsAttributsCaseProps> = (props) => {
@@ -17,7 +18,7 @@ export const GuessStatsAttributsCase: FC<GuessStatsAttributsCaseProps> = (props)
     opacity: 1,
     transform: 'rotateY(0deg)',
     from: { opacity: 0, transform: 'rotateY(-180deg)' }, // Débutez avec une rotation à 180 degrés
-    delay: 400 * props.index, // Ajoutez un délai basé sur l'index pour décaler l'animation de chaque élément
+    delay: (props.delay ?? 400) * props.index, // Ajoutez un délai basé sur l'index pour décaler l'animation de chaque élément
   });
 
   const getArrow = () => {

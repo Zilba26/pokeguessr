@@ -1,6 +1,5 @@
-import React, { FC } from 'react'
+import { FC } from 'react'
 import { Box, useColorModeValue } from '@chakra-ui/react'
-import { Pokemon } from '../../models/pokemon/Pokemon';
 import WordleSoluce from './WordleSoluce';
 import { Entity } from '../../models/Entity';
 import { normalizeString } from '../../utils/normalize';

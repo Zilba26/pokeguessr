@@ -124,7 +124,7 @@ export function GuessStats<T extends Entity>({ useData, service }: GuessStatsPro
     setWin(false);
     setAttributs(service.getCurrentSet());
     toast({
-      title: "Le pokémon a été regénéré !",
+      title: `Le ${service.getSpriteColumnName()} a été regénéré !`,
       status: "info",
       duration: 2000,
       isClosable: true,
