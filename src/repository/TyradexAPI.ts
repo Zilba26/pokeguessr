@@ -1,5 +1,6 @@
-import { Pokemon, Generation } from "../models/Pokemon";
-import { Type } from "../models/Type";
+import { Pokemon, Generation } from "../models/pokemon/Pokemon";
+import { PokemonStats } from "../models/pokemon/PokemonStats";
+import { Type } from "../models/pokemon/Type";
 import { PokemonAPI } from "./PokemonAPI";
 
 export class TyradexAPI implements PokemonAPI {
@@ -23,6 +24,7 @@ export class TyradexAPI implements PokemonAPI {
     private parsePokemon(json: any): Pokemon {
         const types = json.types.map((type: any) => Type.getTypeByName(type.name));
         return new Pokemon(json.pokedexId, json.name.fr, json.sprites.regular, types, json.weight, json.height,
-            json.generation, json.description, (json.evolution?.pre?.length ?? 0) + 1);
+            json.generation, json.description, (json.evolution?.pre?.length ?? 0) + 1, 
+            "Indéfini", "Indéfini", new PokemonStats(0,0,0,0,0,0));
     }
 }

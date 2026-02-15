@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import { FC, useState } from 'react'
 import { Box } from '@chakra-ui/react'
 import { GenSelectBox } from './GenSelectBox'
 

@@ -1,17 +1,10 @@
-import { ReactNode } from "react";
 import { Pokemon } from "./Pokemon";
 import { Type } from "./Type";
-import { HelpTooltip } from "../components/utils/HelpTooltip";
+import { HelpTooltip } from "../../components/utils/HelpTooltip";
+import { Attribut, AttributColumn } from "../Attribut";
+import { Stringabble } from "../../components/utils/Stringabble";
 
-type ColumnValue<T> = (pokemon: Pokemon) => T;
-
-interface PokemonColumn<T> {
-    label: React.ReactNode;
-    value: ColumnValue<T>;
-    withArrow?: boolean;
-}
-
-export class PokemonAttribut<T> {
+export class PokemonAttribut<T extends Stringabble> extends Attribut<T, Pokemon> {
 
     static readonly TYPE = new PokemonAttribut<Type[]>(
         "Types",
@@ -69,8 +62,8 @@ export class PokemonAttribut<T> {
 
     private constructor(
         public readonly id: string,
-        public readonly columns: PokemonColumn<any>[]
-    ) {}
+        public readonly columns: AttributColumn<any, Pokemon>[]
+    ) {super(id, columns);}
 
     public static fromId(id: string): PokemonAttribut<any> | undefined {
         return this.values().find((attribut) => attribut.id === id);

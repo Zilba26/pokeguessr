@@ -1,10 +1,8 @@
+import { Entity } from "../Entity";
 import { PokemonStats } from "./PokemonStats";
 import { Type } from "./Type";
 
-export class Pokemon {
-    pokedexId: number;
-    name: string;
-    sprite: string;
+export class Pokemon extends Entity {
     types: Type[];
     weight: number;
     height: number;
@@ -15,11 +13,9 @@ export class Pokemon {
     habitat: string;
     stats: PokemonStats;
 
-    constructor(id: number, name: string, sprite: string, types: Type[], weight: number, height: number, 
+    constructor(pokedexId: number, name: string, sprite: string, types: Type[], weight: number, height: number,
         generation: Generation, description: string, evolutionStage: EvolutionStage, color: string, habitat: string, stats: PokemonStats) {
-        this.pokedexId = id;
-        this.name = name;
-        this.sprite = sprite;
+        super(pokedexId, name, sprite);
         this.types = types;
         this.weight = weight;
         this.height = height;
@@ -30,17 +26,6 @@ export class Pokemon {
         this.habitat = habitat;
         this.stats = stats;
     }
-
-    public equals(pokemon: Pokemon): boolean {
-        return this.pokedexId === pokemon.pokedexId;
-    }
-
-    public equalsName(name: string): boolean {
-        const name1 = this.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
-        const name2 = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
-        return name1 === name2;
-    }
-
 
 }
 export type Generation = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;

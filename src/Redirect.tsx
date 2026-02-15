@@ -1,4 +1,5 @@
 import { isRouteErrorResponse, useRouteError } from "react-router-dom"
+import Header from "./components/navbar/Navbar";
 
 const Redirect: React.FC = () => {
 
@@ -9,6 +10,7 @@ const Redirect: React.FC = () => {
     }
     return (
       <div>
+        <Header showGameLinks={false}></Header>
         <h1>Redirect</h1>
       </div>
     )
