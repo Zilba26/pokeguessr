@@ -1,10 +1,9 @@
 import './GuessStatsAttributs.css'
-import { Box } from '@chakra-ui/react'
+import { Box, Text } from '@chakra-ui/react'
 import { Entity } from '../../../models/Entity'
 import { Attribut } from '../../../models/Attribut'
 import { GuessStatsAttributsCase } from './GuessStatsAttributsCase'
-import { Stringabble } from '../../utils/Stringabble'
-import { isArray } from 'node:util'
+import { Stringabble, stringabbleToString } from '../../utils/Stringabble'
 
 interface PokeguessProps<T extends Entity> {
   entityGuess: T
@@ -62,7 +61,9 @@ export function GuessStatsAttributs<T extends Entity>({ entityGuess, entityToGue
           arrowHigh={typeof valGuess === "number" && typeof valToGuess === "number" ? getArrow(valGuess, valToGuess) : undefined}
           isAnimated={isAnimated}
           delay={delay}>
-          {Array.isArray(valGuess) ? valGuess.map(v => v.toString()).join(",\n") : valGuess.toString()}
+          <Text color="white" fontSize={Math.min(16, 450 / stringabbleToString(valGuess).length)}>
+            {stringabbleToString(valGuess)}
+          </Text>
         </GuessStatsAttributsCase>
       })}
     </Box>

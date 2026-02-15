@@ -26,11 +26,11 @@ export class GenshinImpactAttribut<T extends Stringabble> extends Attribut<T, Ge
     );
     static readonly RELEASE_VERSION = new GenshinImpactAttribut<string>(
         "Version de sortie",
-        [{ label: "Version de sortie", value: (character: GenshinImpactCharacter) => character.releaseVersion, withArrow: true }]
+        [{ label: "Version de sortie", value: (character: GenshinImpactCharacter) => character.releaseVersion }]
     );
     static readonly BIRTHDAY_DATE = new GenshinImpactAttribut<DateStringabble>(
         "Date d'anniversaire",
-        [{ label: "Anniversaire", value: (character: GenshinImpactCharacter) => DateStringabble.withDayMonth(character.birthday), withArrow: true }]
+        [{ label: "Anniversaire", value: (character: GenshinImpactCharacter) => DateStringabble.withDayMonth(character.birthday) }]
     );
 
     private constructor(
