@@ -2,8 +2,6 @@ import fs from "node:fs";
 import path from "node:path";
 import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 import { PrismaClient } from "../../generated/prisma/client.js";
-import { pokemonSelect } from "../../generated/prisma/models.js";
-import { DefaultArgs } from "@prisma/client/runtime/client";
 
 const TMP_DB_PATH = "/tmp/pokedex.sqlite";
 

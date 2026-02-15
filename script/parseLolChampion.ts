@@ -49,7 +49,7 @@ const STAT_MAP: Record<string, string> = {
 async function parseChampions(lang: string = "en-us") {
 
     const url = `https://wiki.leagueoflegends.com/${lang}/List_of_champions`;
-    const outputPath = path.join(process.cwd(), "generated", "data", `champions-${lang}.json`);
+    const outputPath = path.join(process.cwd(), "src", ".generated", `champions-${lang}.json`);
 
     try {
         const res = await fetch(url);
