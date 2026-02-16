@@ -20,6 +20,7 @@ const Header: FC<NavbarProps> = ({ showGameLinks = true }) => {
       {!isHome && showGameLinks && <div className='navlinks'>
         <NavLink to={`${backLocation}/guess-stats`}>GuessStats</NavLink>
         <NavLink to={`${backLocation}/wordle`}>Wordle</NavLink>
+        <NavLink to={`${backLocation}/blur-reveal`}>BlurReveal</NavLink>
       </div>}
       <div>
         <i className="fa-solid fa-moon" onClick={toggleColorMode}></i>

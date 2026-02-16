@@ -20,6 +20,7 @@ import { LolProvider, useDataLol } from './context/LolContext'
 import { LolService } from './service/LolService'
 import { OnePieceProvider, useDataOnePiece } from './context/OnePieceContext'
 import { OnePieceService } from './service/OnePieceService'
+import { BlurReveal } from './components/blur-reveal/BlurReveal'
 
 const createRandomRoute = <T extends Entity>(path: string, useData: () => T[], service: EntityService<T>) => ([{
   path: path + "/guess-stats",
@@ -27,6 +28,9 @@ const createRandomRoute = <T extends Entity>(path: string, useData: () => T[], s
 }, {
   path: path + "/wordle",
   element: <Wordle<T> useData={useData} service={service} />,
+}, {
+  path: path + "/blur-reveal",
+  element: <BlurReveal<T> useData={useData} service={service} />,
 }]);
 
 const router = createBrowserRouter([

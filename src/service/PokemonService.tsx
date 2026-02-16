@@ -1,4 +1,4 @@
-import GenSelect from "../components/gen-select/GenSelect";
+import GenSelect from "../components/filters/pokemon/gen-select/GenSelect";
 import { Attribut } from "../models/Attribut";
 import { Pokemon } from "../models/pokemon/Pokemon";
 import { PokemonAttribut } from "../models/pokemon/PokemonAttribut";
