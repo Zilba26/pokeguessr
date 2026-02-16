@@ -3,5 +3,8 @@
     "api/**/*.ts": {
       "includeFiles": "prisma/pokedex.sqlite"
     }
-  }
+  },
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/" }
+  ]
 }
