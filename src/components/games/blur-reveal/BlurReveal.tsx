@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react'
 
 import '../guess-stats/GuessStats.scss'
 import { Box, Button, Input, useColorModeValue, Image, Spinner, Center, useToast, useDisclosure, Text } from '@chakra-ui/react';
-import { Entity } from '../../models/Entity';
-import { EntityService } from '../../service/EntityService';
-import { normalizeString } from '../../utils/normalize';
+import { Entity } from '../../../models/Entity';
+import { EntityService } from '../../../service/EntityService';
+import { normalizeString } from '../../../utils/normalize';
 
 
 

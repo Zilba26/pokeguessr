@@ -3,8 +3,8 @@ import { Keyboard, LettersStatus } from './keyboard/Keyboard';
 import { Box, Button, Center, IconButton, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Spinner, useDisclosure } from '@chakra-ui/react';
 import Board from './Board';
 import { MdRefresh } from 'react-icons/md';
-import { Entity } from '../../models/Entity';
-import { EntityService } from '../../service/EntityService';
+import { Entity } from '../../../models/Entity';
+import { EntityService } from '../../../service/EntityService';
 
 interface WordleProps<T extends Entity> {
   useData: () => T[];

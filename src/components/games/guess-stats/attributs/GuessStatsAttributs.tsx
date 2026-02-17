@@ -1,9 +1,9 @@
 import './GuessStatsAttributs.css'
 import { Box, Text } from '@chakra-ui/react'
-import { Entity } from '../../../models/Entity'
-import { Attribut } from '../../../models/Attribut'
+import { Entity } from '../../../../models/Entity'
+import { Attribut } from '../../../../models/Attribut'
 import { GuessStatsAttributsCase } from './GuessStatsAttributsCase'
-import { Stringabble, stringabbleToString } from '../../utils/Stringabble'
+import { Stringabble, stringabbleToString } from '../../../../utils/Stringabble'
 
 interface PokeguessProps<T extends Entity> {
   entityGuess: T

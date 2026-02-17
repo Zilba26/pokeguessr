@@ -1,4 +1,4 @@
-import { Stringabble } from "../../components/utils/Stringabble";
+import { Stringabble } from "../../utils/Stringabble";
 import { Attribut, AttributColumn } from "../Attribut";
 import { OnePieceCharacter } from "./OnePieceCharacter";
 

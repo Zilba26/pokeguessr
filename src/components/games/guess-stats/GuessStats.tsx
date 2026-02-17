@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react'
 
 import './GuessStats.scss'
 import { Box, Button, Input, useColorModeValue, Image, Spinner, Center, useToast, useDisclosure } from '@chakra-ui/react';
-import { SettingsModal } from './settings-modal/SettingsModal';
+import { SettingsModal } from '../settings-modal/SettingsModal';
 import { GuessStatsHeaderCase } from './GuessStatsHeaderCase';
-import { Attribut } from '../../models/Attribut';
-import { Entity } from '../../models/Entity';
-import { EntityService } from '../../service/EntityService';
+import { Attribut } from '../../../models/Attribut';
+import { Entity } from '../../../models/Entity';
+import { EntityService } from '../../../service/EntityService';
 import { GuessStatsAttributs } from './attributs/GuessStatsAttributs';
-import { normalizeString } from '../../utils/normalize';
+import { normalizeString } from '../../../utils/normalize';
 
 
 

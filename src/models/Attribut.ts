@@ -1,4 +1,4 @@
-import { Stringabble } from "../components/utils/Stringabble";
+import { Stringabble } from "../utils/Stringabble";
 import { Entity } from "./Entity";
 
 type ColumnValue<A extends Stringabble, E extends Entity> = (entity: E) => A;

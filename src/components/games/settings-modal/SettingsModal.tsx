@@ -1,8 +1,8 @@
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, Box, Button, IconButton, Icon, ModalFooter, useToast, SystemStyleObject } from "@chakra-ui/react";
 import { ActionMeta, Select } from "chakra-react-select";
 import { useState } from "react";
-import { GuessStatsHeaderCase } from "../GuessStatsHeaderCase";
-import { GuessStatsAttributs } from "../attributs/GuessStatsAttributs";
+import { GuessStatsHeaderCase } from "../guess-stats/GuessStatsHeaderCase";
+import { GuessStatsAttributs } from "../guess-stats/attributs/GuessStatsAttributs";
 import { Entity } from "../../../models/Entity";
 import { Option } from "./Option";
 import { CustomOption } from "./CustomOptionSelect";

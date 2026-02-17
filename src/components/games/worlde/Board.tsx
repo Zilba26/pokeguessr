@@ -1,8 +1,8 @@
 import { FC } from 'react'
 import { Box, useColorModeValue } from '@chakra-ui/react'
 import WordleSoluce from './WordleSoluce';
-import { Entity } from '../../models/Entity';
-import { normalizeString } from '../../utils/normalize';
+import { Entity } from '../../../models/Entity';
+import { normalizeString } from '../../../utils/normalize';
 
 interface BoardProps<T extends Entity> {
   words: string[];

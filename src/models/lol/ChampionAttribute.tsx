@@ -1,4 +1,4 @@
-import { DateStringabble, Stringabble } from "../../components/utils/Stringabble";
+import { DateStringabble, Stringabble } from "../../utils/Stringabble";
 import { Attribut, AttributColumn } from "../Attribut";
 import { Champion } from "./Champion";
 
