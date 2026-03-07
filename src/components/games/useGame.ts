@@ -104,6 +104,7 @@ export function useGame<T extends Entity>({ useData, service, options }: GamePro
     }
 
     const regenerateEntity = async () => {
+        document.getElementById('pyro')?.classList.remove('pyro');
         updateEntitiesData();
         const entityToGuess = service.getRandom(entitiesData);
         setEntityToFind(entityToGuess);
