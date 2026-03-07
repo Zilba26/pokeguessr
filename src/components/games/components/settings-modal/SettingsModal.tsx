@@ -1,13 +1,13 @@
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, Box, Button, IconButton, Icon, ModalFooter, useToast, SystemStyleObject } from "@chakra-ui/react";
 import { ActionMeta, Select } from "chakra-react-select";
 import { useState } from "react";
-import { GuessStatsHeaderCase } from "../guess-stats/GuessStatsHeaderCase";
-import { GuessStatsAttributs } from "../guess-stats/attributs/GuessStatsAttributs";
-import { Entity } from "../../../models/Entity";
-import { Option } from "./Option";
+import { Attribut } from "../../../../models/Attribut";
+import { Entity } from "../../../../models/Entity";
+import { EntityService } from "../../../../service/EntityService";
+import { GuessStatsAttributs } from "../../guess-stats/attributs/GuessStatsAttributs";
+import { GuessStatsHeaderCase } from "../../guess-stats/GuessStatsHeaderCase";
 import { CustomOption } from "./CustomOptionSelect";
-import { Attribut } from "../../../models/Attribut";
-import { EntityService } from "../../../service/EntityService";
+import { Option } from "./Option";
 
 interface SettingsModalProps<T extends Entity> {
   service: EntityService<T>;
@@ -159,7 +159,7 @@ export const SettingsModal = <T extends Entity>(props: SettingsModalProps<T>) =>
             ))}
           </Box>
           <Box className='table-body' display="flex">
-            <GuessStatsAttributs key={entity.id} entityGuess={entity} entityToGuess={entity} isAnimated={false} attributs={attributs} />
+            { entity && <GuessStatsAttributs key={entity.id} entityGuess={entity} entityToGuess={entity} isAnimated={false} attributs={attributs} /> }
           </Box>
         </ModalBody>
         <ModalFooter display="flex" gap="10px">

@@ -11,7 +11,7 @@ import { PokemonService } from './service/PokemonService'
 import { PokemonProvider, useDataPokemon } from './context/PokemonContext'
 import { Entity } from './models/Entity'
 import { EntityService } from './service/EntityService'
-import { GuessStats } from './components/games/guess-stats/GuessStats'
+import { GuessStatsPage } from './components/games/guess-stats/GuessStats'
 import { Home } from './components/Home'
 import { Wordle } from './components/games/worlde/Wordle'
 import { GenshinImpactService } from './service/GenshinImpactService'
@@ -20,17 +20,17 @@ import { LolProvider, useDataLol } from './context/LolContext'
 import { LolService } from './service/LolService'
 import { OnePieceProvider, useDataOnePiece } from './context/OnePieceContext'
 import { OnePieceService } from './service/OnePieceService'
-import { BlurReveal } from './components/games/blur-reveal/BlurReveal'
+import { BlurRevealPage } from './components/games/blur-reveal/BlurReveal'
 
 const createRandomRoute = <T extends Entity>(path: string, useData: () => T[], service: EntityService<T>) => ([{
   path: path + "/guess-stats",
-  element: <GuessStats<T> useData={useData} service={service} />,
+  element: <GuessStatsPage<T> useData={useData} service={service} />,
 }, {
   path: path + "/wordle",
   element: <Wordle<T> useData={useData} service={service} />,
 }, {
   path: path + "/blur-reveal",
-  element: <BlurReveal<T> useData={useData} service={service} />,
+  element: <BlurRevealPage<T> useData={useData} service={service} />,
 }]);
 
 const router = createBrowserRouter([
