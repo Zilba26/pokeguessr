@@ -1,11 +1,12 @@
 import { useState } from 'react'
 
-import { Box, useColorModeValue, Image, Spinner, Center, Text } from '@chakra-ui/react';
+import { Box, useColorModeValue, Image, Spinner, Center, Text, useDisclosure } from '@chakra-ui/react';
 import { Entity } from '../../../models/Entity';
 import { EntityService } from '../../../service/EntityService';
 import { RegenerateButton } from '../components/RegenerateButton';
 import { AutocompleteDropdown } from '../components/AutocompleteDropdown';
 import { GameProvider, useGameContext } from '../contextProvider';
+import { BlurRevealSettingsModal } from './BlurRevealSettingsModal';
 
 interface BlurRevealPageProps<T extends Entity> {
     service: EntityService<T>;
@@ -13,11 +14,11 @@ interface BlurRevealPageProps<T extends Entity> {
 }
 
 export function BlurRevealPage<T extends Entity>({ service, useData }: BlurRevealPageProps<T>) {
-    const [blurLevel, setBlurLevel] = useState<number>(30);
+    const [blurLevel, setBlurLevel] = useState<number>(service.getBlurAmount());
 
     const options = {
-        onRegenerate: () => setBlurLevel(30),
-        onEnterGuess: () => setBlurLevel((prev) => Math.max(prev - 3, 0)),
+        onRegenerate: () => setBlurLevel(service.getBlurAmount()),
+        onEnterGuess: () => setBlurLevel((prev) => Math.max(prev - service.getBlurDecrementation(), 0)),
         onWin: () => setBlurLevel(0),
     }
 
@@ -35,6 +36,8 @@ function BlurReveal<T extends Entity>({ service, blurLevel }: BlurRevealProps<T>
 
     const { allEntitiesData, entityToFind, entityGuessTries } = useGameContext();
 
+    const { isOpen, onOpen, onClose } = useDisclosure();
+
     const border = useColorModeValue('black', 'white');
     const bg = useColorModeValue('whiteal', 'gray.700');
 
@@ -48,7 +51,7 @@ function BlurReveal<T extends Entity>({ service, blurLevel }: BlurRevealProps<T>
         <>
             {service.getFilterController()?.render?.()}
             <Box h="20px"></Box>
-            <RegenerateButton />
+            <RegenerateButton onOpenSettings={onOpen} />
             <Box h="30px"></Box>
             <Image src={entityToFind.sprite} h="200px" filter={`blur(${blurLevel}px)`} draggable={false}></Image>
             <Box h="50px"></Box>
@@ -64,6 +67,7 @@ function BlurReveal<T extends Entity>({ service, blurLevel }: BlurRevealProps<T>
                     })}
                 </Box>
             </Box>
+            <BlurRevealSettingsModal service={service} isOpen={isOpen} onClose={onClose} />
         </>
     )
 }

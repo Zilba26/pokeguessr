@@ -1,4 +1,4 @@
-import { useDisclosure, useToast } from "@chakra-ui/react";
+import { useToast } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { Entity } from "../../models/Entity";
 import { normalizeString } from "../../utils/normalize";

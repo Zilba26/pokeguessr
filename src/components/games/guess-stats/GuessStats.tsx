@@ -17,20 +17,23 @@ interface GuessStatsPageProps<T extends Entity> {
 }
 
 export function GuessStatsPage<T extends Entity>({ service, useData }: GuessStatsPageProps<T>) {
-  return <GameProvider useData={useData} service={service}><GuessStats<T> service={service} /></GameProvider>;
+  const [attributs, setAttributs] = useState(service.getCurrentSet());
+
+  return <GameProvider useData={useData} service={service} options={{ onRegenerate: () => setAttributs(service.getCurrentSet()) }}>
+    <GuessStats<T> service={service} attributs={attributs} />
+  </GameProvider>;
 }
 
 interface GuessStatsProps<T extends Entity> {
   service: EntityService<T>;
+  attributs: Attribut<any, T>[];
 }
 
-function GuessStats<T extends Entity>({ service }: GuessStatsProps<T>) {
+function GuessStats<T extends Entity>({ service, attributs }: GuessStatsProps<T>) {
 
   const { allEntitiesData, entityToFind, win, entityGuessTries } = useGameContext();
-  
-  const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const [attributs, setAttributs] = useState(service.getCurrentSet());
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   if (allEntitiesData.length === 0 || !entityToFind) {
     return <Center h="100%" minH="inherit">
@@ -42,7 +45,7 @@ function GuessStats<T extends Entity>({ service }: GuessStatsProps<T>) {
     <>
       {service.getFilterController()?.render?.()}
       <Box h="20px"></Box>
-      <RegenerateButton onOpenSettings={onOpen}/>
+      <RegenerateButton onOpenSettings={onOpen} />
       <Box h="30px"></Box>
       <AutocompleteDropdown />
       {(win) &&

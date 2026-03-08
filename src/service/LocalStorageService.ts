@@ -8,6 +8,10 @@ export abstract class LocalStorageService<T extends Entity> {
         this.entityName = entityName;
     }
 
+    // --------------------------------------------------------------
+    // GUESS STATS STUFF
+    // --------------------------------------------------------------
+
     private getCurrentSetKey(): string {
         return `${this.entityName}_current_set`;
     }
@@ -74,5 +78,30 @@ export abstract class LocalStorageService<T extends Entity> {
         const registeredSets = this.getRegisteredSets();
         registeredSets.delete(setName);
         this.saveRegisteredSets(registeredSets);
+    }
+
+    // --------------------------------------------------------------
+    // BLUR REVEAL STUFF
+    // --------------------------------------------------------------
+
+    private static readonly BLUR_AMOUNT_KEY = "BLUR_AMOUNT";
+    private static readonly BLUR_DECREMENTATION_KEY = "BLUR_DECREMENTATION";
+
+    public getBlurAmount(): number {
+        const data = localStorage.getItem(LocalStorageService.BLUR_AMOUNT_KEY);
+        return data ? JSON.parse(data) : 30;
+    }
+
+    public saveBlurAmount(blurAmount: number): void {
+        localStorage.setItem(LocalStorageService.BLUR_AMOUNT_KEY, JSON.stringify(blurAmount));
+    }
+
+    public getBlurDecrementation(): number {
+        const data = localStorage.getItem(LocalStorageService.BLUR_DECREMENTATION_KEY);
+        return data ? JSON.parse(data) : 3;
+    }
+
+    public saveBlurDecrementation(blurDecrementation: number): void {
+        localStorage.setItem(LocalStorageService.BLUR_DECREMENTATION_KEY, JSON.stringify(blurDecrementation));
     }
 }
