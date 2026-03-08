@@ -23,8 +23,6 @@ export function useGame<T extends Entity>({ useData, service, options }: GamePro
 
     const toast = useToast();
 
-    const { isOpen, onOpen, onClose } = useDisclosure();
-
     const updateEntitiesData = () => {
         setEntitiesData(allEntitiesData.filter((entity: T) => service.getFilterController()?.filter(entity) ?? true));
     }
@@ -135,9 +133,6 @@ export function useGame<T extends Entity>({ useData, service, options }: GamePro
         win,
         setWin,
         toast,
-        isOpen,
-        onOpen,
-        onClose,
         enterEntity,
         onGuessInputChange,
         handleKeyDown,

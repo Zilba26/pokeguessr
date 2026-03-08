@@ -3,7 +3,6 @@ import { useContext, createContext } from "react";
 import { useGame } from "./useGame";
 import { EntityService } from "../../service/EntityService";
 import { Entity } from "../../models/Entity";
-import { SettingsModal } from "./components/settings-modal/SettingsModal";
 import { Box } from "@chakra-ui/react";
 
 const GameContext = createContext<ReturnType<typeof useGame<any>> | null>(null);
@@ -29,7 +28,6 @@ export const GameProvider = <T extends Entity,>(props: GameProviderProps<T>) => 
       <Box className="random">
         {props.children}
       </Box>
-      <SettingsModal service={props.service} isOpen={logic.isOpen} onClose={logic.onClose} />
     </GameContext.Provider>
   );
 };

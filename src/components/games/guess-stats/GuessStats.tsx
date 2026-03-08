@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { Box, Image, Spinner, Center } from '@chakra-ui/react';
+import { Box, Image, Spinner, Center, useDisclosure } from '@chakra-ui/react';
 import { GuessStatsHeaderCase } from './GuessStatsHeaderCase';
 import { Attribut } from '../../../models/Attribut';
 import { Entity } from '../../../models/Entity';
@@ -9,6 +9,7 @@ import { GuessStatsAttributs } from './attributs/GuessStatsAttributs';
 import { GameProvider, useGameContext } from '../contextProvider';
 import { RegenerateButton } from '../components/RegenerateButton';
 import { AutocompleteDropdown } from '../components/AutocompleteDropdown';
+import { SettingsModal } from './settings-modal/GuessStatsSettingsModal';
 
 interface GuessStatsPageProps<T extends Entity> {
   service: EntityService<T>;
@@ -26,6 +27,8 @@ interface GuessStatsProps<T extends Entity> {
 function GuessStats<T extends Entity>({ service }: GuessStatsProps<T>) {
 
   const { allEntitiesData, entityToFind, win, entityGuessTries } = useGameContext();
+  
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [attributs, setAttributs] = useState(service.getCurrentSet());
 
@@ -39,7 +42,7 @@ function GuessStats<T extends Entity>({ service }: GuessStatsProps<T>) {
     <>
       {service.getFilterController()?.render?.()}
       <Box h="20px"></Box>
-      <RegenerateButton />
+      <RegenerateButton onOpenSettings={onOpen}/>
       <Box h="30px"></Box>
       <AutocompleteDropdown />
       {(win) &&
@@ -63,6 +66,9 @@ function GuessStats<T extends Entity>({ service }: GuessStatsProps<T>) {
           })}
         </Box>
       </Box>
+
+      <SettingsModal service={service} isOpen={isOpen} onClose={onClose} />
+
     </>
   )
 }

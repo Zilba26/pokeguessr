@@ -4,8 +4,8 @@ import { useState } from "react";
 import { Attribut } from "../../../../models/Attribut";
 import { Entity } from "../../../../models/Entity";
 import { EntityService } from "../../../../service/EntityService";
-import { GuessStatsAttributs } from "../../guess-stats/attributs/GuessStatsAttributs";
-import { GuessStatsHeaderCase } from "../../guess-stats/GuessStatsHeaderCase";
+import { GuessStatsAttributs } from "../attributs/GuessStatsAttributs";
+import { GuessStatsHeaderCase } from "../GuessStatsHeaderCase";
 import { CustomOption } from "./CustomOptionSelect";
 import { Option } from "./Option";
 
