@@ -5,7 +5,7 @@ import { EntityService } from "../../service/EntityService";
 import { Entity } from "../../models/Entity";
 import { Box } from "@chakra-ui/react";
 
-const GameContext = createContext<ReturnType<typeof useGame<any>> | null>(null);
+const GameContext = createContext<unknown>(null);
 
 export interface GameProviderProps<T extends Entity> extends React.PropsWithChildren {
   useData: () => T[];
@@ -32,8 +32,8 @@ export const GameProvider = <T extends Entity,>(props: GameProviderProps<T>) => 
   );
 };
 
-export const useGameContext = () => {
+export const useGameContext = <T extends Entity,>() => {
   const ctx = useContext(GameContext);
   if (!ctx) throw new Error("useGameContext must be used inside GameProvider");
-  return ctx;
+  return ctx as ReturnType<typeof useGame<T>>;
 };
